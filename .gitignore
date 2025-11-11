@@ -1,3 +1,112 @@
+# React frontend .gitignore template
+# Created based on the official GitHub gitignore template for Node
+# Dependencies
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+bower_components/
+jspm_packages/
+web_modules/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Build & Output
+/dist/
+/build/
+/.next/
+/out/
+web-build/
+.nuxt
+.output
+.cache/
+.temp/
+.vite/
+.svelte-kit/
+.docusaurus/
+.serverless/
+.firebase/
+
+# Mobile & Native
+ios/
+android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+.expo/
+
+# Debug & Logs
+logs/
+*.log
+npm-debug.*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Testing & Coverage
+/coverage/
+/.nyc_output/
+*.lcov
+*.test.json
+
+# IDE & Editor
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.vscode-test/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Cache & Temporary
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.npm/
+.dynamodb/
+.fusebox/
+.tern-port
+.metro-health-check*
+
+# OS
+.DS_Store
+*.pem
+
+# Runtime
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+
+
+# Python backend .gitignore template
+# Created based on the official GitHub gitignore template for Python
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -94,11 +203,11 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 
-# UV
-#   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#uv.lock
+# UV (uv package manager)
+uv.lock
+uv.lock.*
+.uv/
+uv/
 
 # poetry
 #   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
@@ -179,3 +288,16 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# ANTLR4 (Python target) - ignore generated parser/lexer/visitor/listener and token files
+.antlr
+*_lexer.py
+*_parser.py
+*_listener.py
+*_visitor.py
+*.tokens
+*.interp
+generated/
+build/antlr/
+gen/
+# End ANTLR4
