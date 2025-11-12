@@ -12,7 +12,7 @@ A web-based platform that receives live camera streams and allows users to defin
 
     - For linux:
         ```
-        source venv/bin/activate
+        source .venv/bin/activate
         ```
      
     - For Windows:
