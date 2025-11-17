@@ -19,50 +19,138 @@ A web-based platform that receives live camera streams and allows users to defin
         ```
         .\.venv\Scripts\Activate.ps1
         ```
-5.  pip install python-dotenv
-    pip install fastapi uvicorn
-    pip install pydantic-settings
+5. Install additional packages:
+```python
+    uv add python-dotenv fastapi uvicorn pydantic-settings sqlalchemy
 
-6. chạy docker:
-    docker-compose up -d                            # compose db lẫn app
-    
-    ***
-    docker-compose up -d app                        # compose chỉ app
-    docker-compose up -d db                         # compose chỉ db
-    ***
-7. tạo migration file
-    docker-compose exec app alembic revision --autogenerate -m "init db schema"
+```
 
-    # copy file từ trong docker ra
-    docker-compose cp app:/app/alembic/versions/. ./alembic/versions/        
+# Running with doocker
+## Start both app and db
 
-    # Chạy migrate 
-    docker-compose exec app alembic upgrade head
+```python
+    docker-compose up -d
+```
+
+## Start only the app
+```python
+docker-compose up -d app
+```
+
+## Start only the db
+```python
+docker-compose up -d db
+```
+--- 
+# Database Migration (Alembic)
+
+## Create migration file
+
+```python
+docker-compose exec app alembic revision --autogenerate -m "init db schema"
+```
 
 
-    ***
-    # Rebuild docker khi bị lỗi
-    docker-compose down                             # dừng mọi thứ 
-    (hoặc dừng volume (docker-compose down -v))
-    docker-compose up -d --build                    # rebuild
+## Copy migration file from container
+```python
+docker-compose cp app:/app/alembic/versions/. ./alembic/versions/
+```
 
-    # Khi file migration bị lỗi
-    rm ./alembic/versions/800c9bcd8d18_init_db_schema.py   # xóa migration file
 
-    # Khi file migration bị trống
-    Tự generate thủ công, mở file trống ra paste thủ công vào (gửi riêng).
-    ***
+## Apply migration
+```python
+docker-compose exec app alembic upgrade head
+```
 
-8. Check database:
+---
+
+# Troubleshooting
+
+## Rebuild containers
+
+```python
+docker-compose down
+docker-compose up -d --build
+```
+
+
+## Remove volumes (if needed)
+
+```python
+docker-compose down -v
+```
+
+
+## Fix migration file issues
+
+### 1. Migration file is corrupted (remove migration file then compose the migration file again)
+
+```python
+rm ./alembic/versions/<migration_file>.py
+```
+
+### 2. Migration file is empty
+Open the file and paste the manually generated migration script.
+
+---
+
+# Check Database Tables
+```python
 docker-compose exec db psql -U postgres -d vehicle_fault_db -c "\dt"
-                    List of tables
- Schema |           Name            | Type  |  Owner
---------+---------------------------+-------+----------
- public | alembic_version           | table | postgres
- public | cameras                   | table | postgres
- public | police_camera_assignments | table | postgres
- public | rules                     | table | postgres
- public | users                     | table | postgres
- public | violations                | table | postgres
- public | zones                     | table | postgres
-(7 rows)
+```
+
+
+Expected tables:
+- alembic_version  (table alembic generate)
+- users  
+- cameras  
+- zones  
+- rules  
+- violations  
+- police_camera_assignments  
+
+---
+
+# Commit Convention
+
+We follow **Conventional Commits**:
+```python
+feat: new feature
+fix: bug fix
+docs: documentation updates
+refactor: code structure changes
+build: docker or build system
+```
+For example:
+
+```python
+git commit -m "feat(database): add full database models and initial migration" -m "Adds SQLAlchemy models, Alembic configuration, and the initial database migration with PostgreSQL 18 support. It includes tables for users, cameras, zones, rules, violations, and police assignments."
+```
+
+Branch naming:
+
+```python
+feature/<name>
+bugfix/<name>
+docs/<name>
+hotfix/<name>
+```
+
+
+---
+
+# Notes
+- `.env` must not be committed.
+- Migrations should always be run inside Docker.
+- PostgreSQL 18 requires `pgcrypto` for UUID generation.
+
+---
+
+# License
+This project is for academic and internal team development.
+
+---
+
+# Contact
+For issues, please open a GitHub issue or contact the development team.
+
