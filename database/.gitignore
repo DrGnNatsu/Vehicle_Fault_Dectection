@@ -1,5 +1,0 @@
-__pycache__/
-env/
-.env
-*.pyc
-pg_data/

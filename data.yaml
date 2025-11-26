@@ -1,0 +1,18 @@
+path: Final_Traffic_Dataset
+train: images/train
+val: images/val
+test: images/test
+# Tổng cộng 9 class
+nc: 9
+
+# Tên hiển thị khi detect
+names:
+  0: car
+  1: bus
+  2: truck
+  3: motorbike
+  4: person
+  5: traffic_light
+  6: helmet
+  7: no_helmet
+  8: license_plate
