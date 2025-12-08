@@ -1,1 +1,1 @@
-start 01-04-2025
+IF vehicle.speed==5 THEN TERMINATED
