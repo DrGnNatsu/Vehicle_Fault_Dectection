@@ -15,15 +15,16 @@ from app.core.config import settings
 
 from app.models.base import Base
 import app.models.user
-import app.models.camera
+import app.models.sources
 import app.models.zone
 import app.models.rule
 import app.models.violation
-import app.models.police_camera_assignment
+import app.models.police_source_assignment
 
 
 config = context.config
-fileConfig(config.config_file_name)
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
 
