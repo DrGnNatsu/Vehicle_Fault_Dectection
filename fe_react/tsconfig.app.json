@@ -8,11 +8,16 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
     "esModuleInterop": false,
+    "ignoreDeprecations": "6.0",
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

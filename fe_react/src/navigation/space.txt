@@ -1,1 +1,0 @@
-Please delete this file after in this folder as it is just a placeholder to keep the folder structure in version control systems like Git.
