@@ -36,8 +36,8 @@ export default function BeforeNavigation() {
   }
 
   return (
-    <nav className="w-full h-20 bg-transparent">
-      <div className="max-w-full mx-auto h-full px-4 flex items-center justify-between">
+    <nav className="w-full h-20 bg-transparent px-5">
+      <div className="max-w-full mx-auto h-full px-10 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 flex items-center justify-center">
@@ -47,7 +47,7 @@ export default function BeforeNavigation() {
         </div>
 
         {/* Right Section - Dark Mode Toggle & Login */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 mr-5">
           {/* Dark Mode Toggle */}
           <div className="flex items-center gap-3">
             <Switch
@@ -59,10 +59,14 @@ export default function BeforeNavigation() {
           </div>
 
           {/* Login Button */}
-          <Button onClick={handleLoginClick} size="lg" className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5">
-            <User className="w-5 h-5" />
-            <span>Login</span>
-          </Button>
+            <Button
+              onClick={handleLoginClick}
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 px-6"
+            >
+              <User className="w-5 h-5" />
+              <span>Login</span>
+            </Button>
         </div>
       </div>
     </nav>

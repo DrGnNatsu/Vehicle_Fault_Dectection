@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 export default function Footer() {
   return (
     <footer className="w-full bg-transparent">
-      <div className="max-w-[1440px] mx-auto px-4 py-12 flex flex-col gap-6">
+      <div className="max-w-full mx-auto px-4 py-12 flex flex-col gap-6">
 
         {/* Logo */}
         <div className="flex items-center gap-4">
@@ -18,7 +18,7 @@ export default function Footer() {
             href="https://twitter.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1 bg-white rounded-xl hover:bg-gray-100"
+            className="p-1  rounded-xl hover:bg-gray-100"
           >
             <Twitter className="w-6 h-6 text-gray-500" />
           </a>
@@ -27,7 +27,7 @@ export default function Footer() {
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1 bg-white rounded-xl hover:bg-gray-100"
+            className="p-1  rounded-xl hover:bg-gray-100"
           >
             <Youtube className="w-6 h-6 text-gray-500" />
           </a>
@@ -36,7 +36,7 @@ export default function Footer() {
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1 bg-white rounded-xl hover:bg-gray-100"
+            className="p-1  rounded-xl hover:bg-gray-100"
           >
             <Linkedin className="w-6 h-6 text-gray-500" />
           </a>
@@ -45,7 +45,7 @@ export default function Footer() {
             href="https://discord.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1 bg-white rounded-xl hover:bg-gray-100"
+            className="p-1  rounded-xl hover:bg-gray-100"
           >
             <Disc3 className="w-6 h-6 text-gray-500" />
           </a>
@@ -74,7 +74,7 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-
+        <div className="mb-12"></div>
       </div>
     </footer>
   )
