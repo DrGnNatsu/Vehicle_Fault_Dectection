@@ -1,4 +1,4 @@
-# Generated from ./Camera.g4 by ANTLR 4.9.2
+# Generated from Camera.g4 by ANTLR 4.9.2
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -106,6 +106,14 @@ class CameraParser ( Parser ):
         def getRuleIndex(self):
             return CameraParser.RULE_program
 
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterProgram" ):
+                listener.enterProgram(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitProgram" ):
+                listener.exitProgram(self)
+
 
 
 
@@ -152,6 +160,14 @@ class CameraParser ( Parser ):
         def getRuleIndex(self):
             return CameraParser.RULE_command
 
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterCommand" ):
+                listener.enterCommand(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitCommand" ):
+                listener.exitCommand(self)
+
 
 
 
@@ -191,6 +207,14 @@ class CameraParser ( Parser ):
 
         def getRuleIndex(self):
             return CameraParser.RULE_condition
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterCondition" ):
+                listener.enterCondition(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitCondition" ):
+                listener.exitCondition(self)
 
 
 
@@ -234,6 +258,14 @@ class CameraParser ( Parser ):
 
         def getRuleIndex(self):
             return CameraParser.RULE_orCondition
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterOrCondition" ):
+                listener.enterOrCondition(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitOrCondition" ):
+                listener.exitOrCondition(self)
 
 
 
@@ -291,6 +323,14 @@ class CameraParser ( Parser ):
         def getRuleIndex(self):
             return CameraParser.RULE_andCondition
 
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterAndCondition" ):
+                listener.enterAndCondition(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitAndCondition" ):
+                listener.exitAndCondition(self)
+
 
 
 
@@ -345,6 +385,14 @@ class CameraParser ( Parser ):
         def getRuleIndex(self):
             return CameraParser.RULE_compare
 
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterCompare" ):
+                listener.enterCompare(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitCompare" ):
+                listener.exitCompare(self)
+
 
 
 
@@ -384,6 +432,14 @@ class CameraParser ( Parser ):
 
         def getRuleIndex(self):
             return CameraParser.RULE_obj
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterObj" ):
+                listener.enterObj(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitObj" ):
+                listener.exitObj(self)
 
 
 
@@ -438,6 +494,14 @@ class CameraParser ( Parser ):
         def getRuleIndex(self):
             return CameraParser.RULE_operations
 
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterOperations" ):
+                listener.enterOperations(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitOperations" ):
+                listener.exitOperations(self)
+
 
 
 
@@ -474,6 +538,14 @@ class CameraParser ( Parser ):
 
         def getRuleIndex(self):
             return CameraParser.RULE_expr
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterExpr" ):
+                listener.enterExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitExpr" ):
+                listener.exitExpr(self)
 
 
 

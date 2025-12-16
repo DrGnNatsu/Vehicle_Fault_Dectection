@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+alembic
+pydantic-settings
+python-multipart
+python-dotenv
+passlib[bcrypt]  # cho hash password (bcrypt)
+PyJWT  # cho JWT token
