@@ -1,7 +1,16 @@
 from fastapi import FastAPI
 import uvicorn
+from app.api import assignments, sources
 
-app = FastAPI()
+app = FastAPI(
+    title="Vehicle Fault Detection API",
+    description="Backend API for Vehicle Fault Detection System",
+    version="1.0.0"
+)
+
+# Include routers
+app.include_router(assignments.router)
+app.include_router(sources.router)
 
 @app.get("/")
 def root():
