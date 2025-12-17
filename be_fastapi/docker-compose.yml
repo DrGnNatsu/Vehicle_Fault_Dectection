@@ -2,11 +2,11 @@ services:
   db:
     image: postgres:18
     environment:
-      POSTGRES_USER: ${DATABASE_ROOT_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_ROOT_PASSWORD}
-      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vehicle_fault_db
     ports:
-      - ${DATABASE_PORT}:5432
+      - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql
     healthcheck:
