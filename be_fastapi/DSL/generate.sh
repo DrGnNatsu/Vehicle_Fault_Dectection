@@ -1,1 +1,0 @@
-python run.py gen --lang_file ./Camera.g4
