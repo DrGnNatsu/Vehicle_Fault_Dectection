@@ -1,6 +1,8 @@
-from sqlalchemy import Column, String, Boolean, TIMESTAMP, text
+from sqlalchemy import Column, String, Boolean, TIMESTAMP, text, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from .base import Base
+from app.enum.role import Role
+
 
 class User(Base):
     __tablename__ = "users"
@@ -8,7 +10,7 @@ class User(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuidv7()"))
     email = Column(String, unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    role = Column(String, nullable=False)
+    role = Column(Enum(Role), nullable=False)
     full_name = Column(String)
     license_plate = Column(String, unique=True)
     is_active = Column(Boolean, nullable=False, server_default=text("TRUE"))
