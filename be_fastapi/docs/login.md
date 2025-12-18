@@ -19,7 +19,7 @@ The login process follows a linear, secure flow:
 2.  **Validation Layer:** The API validates the data format (e.g., valid email structure).
 3.  **Repository Layer:** The system queries the database for the user record using the email.
 4.  **Service Layer (Security):**
-    * *User Check:* If user is missing, raise `AuthFailedException`.
+    * *User Check:* If user is missing, raise `InvalidCredentialsException`.
     * *Password Check:* Verify input against stored hash using **Argon2**.
     * *Token Gen:* If valid, create a JWT (signed, expires in 30m).
 5.  **Response:** The system returns the Access Token and User Role.
@@ -57,7 +57,7 @@ sequenceDiagram
 
         Note over SVC: 4. Security Logic
         alt User Missing OR Hash Mismatch
-            SVC-->>EXC: Raise AuthFailedException
+            SVC-->>EXC: Raise InvalidCredentialsException
             Note right of EXC: Global Handler catches error
             EXC-->>Client: 401 Unauthorized {"detail": "Incorrect credentials"}
         else Credentials Valid

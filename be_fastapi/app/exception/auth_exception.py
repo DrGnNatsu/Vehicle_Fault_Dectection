@@ -8,7 +8,7 @@ Login related exceptions
 
 
 # Case: Auth Failed
-class AuthFailedException(AppException):
+class InvalidCredentialsException(AppException):
     status_code = status.HTTP_401_UNAUTHORIZED
     detail = "Incorrect email or password"
 
@@ -28,12 +28,6 @@ class TokenExpiredException(AppException):
 """
 Registration related exceptions
 """
-
-
-# Case: Email Empty
-class EmailEmptyException(AppException):
-    status_code = status.HTTP_400_BAD_REQUEST
-    detail = "The provided email format is empty"
 
 
 # Case: Email Already Registered

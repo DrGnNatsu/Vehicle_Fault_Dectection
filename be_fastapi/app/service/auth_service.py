@@ -1,20 +1,22 @@
+import logging
 from datetime import timedelta
 
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.exception.auth_exception import AuthFailedException, EmailDuplicateException, EmailEmptyException, \
+from app.exception.auth_exception import InvalidCredentialsException, \
     PasswordTooWeakException, PasswordDoNotMatchException
-from app.exception.user_exception import UserNotFoundException
-from app.repository.user import UserRepository
+from app.repository.user_repo import UserRepository
 from app.schemas.login import LoginResponseDTO, LoginRequestDTO
 from app.schemas.register import RegisterRequestDTO, RegisterResponseDTO, RegisterCreateUserDTO
 from app.utils.auth import verify_password, create_access_token, is_password_valid, get_password_hash
 
+logger = logging.getLogger(__name__)
+
 
 class AuthService:
-    def __init__(self):
-        self.user_repo = UserRepository()
+    def __init__(self, user_repo: UserRepository):
+        self.user_repo = user_repo
 
     """
     Authenticate user and generate JWT token upon successful login.
@@ -22,19 +24,15 @@ class AuthService:
     :param db: Database session.    
     :return: LoginResponseDTO containing JWT token and user role.
     :raises UserNotFoundException: If the user with the provided email does not exist.
-    :raises AuthFailedException: If the provided password is incorrect. 
+    :raises InvalidCredentialsException: If the provided password is incorrect. 
     """
 
     def authenticate_user(self, login_form: LoginRequestDTO, db: Session) -> LoginResponseDTO:
         user = self.user_repo.get_user_by_email(login_form.email, db)
 
-        # Check if user exists
-        if not user:
-            raise UserNotFoundException
-
-        # Verify password
-        if not verify_password(login_form.password, user.hashed_password):
-            raise AuthFailedException
+        # Verify password and user existence
+        if not user or not verify_password(login_form.password, user.hashed_password):
+            raise InvalidCredentialsException
 
         data: dict = {
             "sub": str(user.id),
@@ -57,11 +55,11 @@ class AuthService:
     """
 
     def register_user(self, register_form: RegisterRequestDTO, db: Session) -> RegisterResponseDTO:
-        if register_form.email is None:
-            raise EmailEmptyException
-
+        # Silent Failure
         if self.user_repo.get_user_by_email(register_form.email, db):
-            raise EmailDuplicateException
+            logger.info(f"Registration attempt for existing email: {register_form.email}")
+
+            return RegisterResponseDTO(message="User registered successfully")
 
         if not is_password_valid(register_form.password):
             raise PasswordTooWeakException
