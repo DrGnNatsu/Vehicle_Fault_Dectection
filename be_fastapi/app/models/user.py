@@ -1,6 +1,5 @@
 from sqlalchemy import Column, String, Boolean, TIMESTAMP, text
-from sqlalchemy import Enum as SQLAEnum
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, ENUM as PGEnum
 
 from app.enum.role import Role
 from .base import Base
@@ -13,7 +12,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     role = Column(
-        SQLAEnum(Role, name="role", create_type=False),
+        PGEnum(Role, name="role", create_type=True),
         nullable=False,
         server_default=Role.user.value
     )
