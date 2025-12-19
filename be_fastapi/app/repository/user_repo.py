@@ -18,7 +18,7 @@ class UserRepository:
         new_user = User(
             email=str(data.email),
             hashed_password=data.password,
-            role=Role.USER
+            role=Role.user
         )
 
         try:

@@ -1,6 +1,6 @@
 from enum import Enum
 
-class Role(Enum):
-    ADMIN = "admin"
-    POLICE = "police"
-    USER = "user"
+class Role(str, Enum):
+    admin = "admin"
+    police = "police"
+    user = "user"
