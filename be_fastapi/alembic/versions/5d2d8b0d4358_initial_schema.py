@@ -1,8 +1,8 @@
-"""final database schema
+"""initial schema
 
-Revision ID: 483b90074a2a
+Revision ID: 5d2d8b0d4358
 Revises: 
-Create Date: 2025-12-19 03:13:37.586345
+Create Date: 2025-12-19 09:50:02.101305
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '483b90074a2a'
+revision: str = '5d2d8b0d4358'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,7 +24,7 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), server_default=sa.text('uuidv7()'), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('hashed_password', sa.String(), nullable=False),
-    sa.Column('role', sa.Enum('admin', 'police', 'user', name='role'), server_default='user', nullable=False),
+    sa.Column('role', sa.String(), nullable=False),
     sa.Column('full_name', sa.String(), nullable=True),
     sa.Column('license_plate', sa.String(), nullable=True),
     sa.Column('is_active', sa.Boolean(), server_default=sa.text('TRUE'), nullable=False),
