@@ -7,13 +7,24 @@ from app.core.cors import setup_cors
 from app.exception.base_exception import AppException
 from app.exception.handlers import app_exception_handler
 
-app = FastAPI(title="Traffic System", version="1.0.0")
+from app.api import assignments, sources
+
+app = FastAPI(
+    title="Vehicle Fault Detection API",
+    description="Backend API for Vehicle Fault Detection System",
+    version="1.0.0"
+)
+
+
+
 # Allow CORS
 setup_cors(app)
 
+# Include routers
 app.add_exception_handler(AppException, app_exception_handler)
 app.include_router(api_router, prefix=settings.API_V1_STR)
-
+app.include_router(assignments.router)
+app.include_router(sources.router)
 
 @app.get("/")
 def root():
