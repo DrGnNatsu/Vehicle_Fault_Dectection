@@ -301,3 +301,13 @@ generated/
 build/antlr/
 gen/
 # End ANTLR4
+
+# AI Model Data - Large datasets and annotations
+ai_model/annotations_trainval2017/
+ai_model/annotations/
+ai_model/*.json
+*.json
+# Allow package.json and other config files
+!package.json
+!tsconfig.json
+!.vscode/*.json
