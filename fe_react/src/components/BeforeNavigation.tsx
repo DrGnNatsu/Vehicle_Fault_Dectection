@@ -6,18 +6,9 @@ import { Switch } from "@/components/ui/switch"
 export default function BeforeNavigation() {
   const [isDarkMode, setIsDarkMode] = useState(false)
 
-  // Initialize dark mode from localStorage or system preference
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme")
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      setIsDarkMode(true)
-      document.documentElement.classList.add("dark")
-    }
-  }, [])
-
-  // Toggle dark mode
+  // ... (Keep your existing useEffect/Handlers here) ... 
+  
+  // Toggle dark mode handler
   const handleDarkModeToggle = (checked: boolean) => {
     setIsDarkMode(checked)
     if (checked) {
@@ -29,45 +20,44 @@ export default function BeforeNavigation() {
     }
   }
 
-  // Handle login button click
-  const handleLoginClick = () => {
-    // Add your login logic here
-    console.log("Login button clicked")
-  }
-
   return (
-    <nav className="w-full h-20 bg-transparent px-5">
-      <div className="max-w-full mx-auto h-full px-10 flex items-center justify-between">
-        {/* Logo Section */}
+    <nav className="w-full h-20 bg-transparent flex justify-center border-b border-gray-100 dark:border-gray-800"> 
+      {/* 2. Inner Container: Matches Figma's 1440px width, but shrinks on smaller screens */}
+      <div className="w-full !px-10 h-full flex items-center justify-between">
+        {/* Left Section: Logo */}
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 flex items-center justify-center">
-            <Camera className="w-10 h-10 text-blue-600" strokeWidth={2.5} />
+            <Camera className="w-10 h-10 text-blue-600" />
           </div>
-          <h1 className="text-blue-600 text-4xl md:text-5xl font-extrabold font-sans leading-[48px]">CameraLanguage</h1>
+          <h1 className="text-blue-600 text-4xl md:text-5xl font-extrabold font-sans leading-[48px]">
+            CameraLanguage
+          </h1>
         </div>
 
-        {/* Right Section - Dark Mode Toggle & Login */}
-        <div className="flex items-center gap-6 mr-5">
+        <div className="flex items-center gap-6">
+          
           {/* Dark Mode Toggle */}
           <div className="flex items-center gap-3">
-            <Switch
+             <Switch
               checked={isDarkMode}
               onCheckedChange={handleDarkModeToggle}
               className="data-[state=checked]:bg-blue-600"
             />
-            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Darkmode</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Darkmode
+            </span>
           </div>
 
           {/* Login Button */}
-            <Button
-              onClick={handleLoginClick}
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white gap-1.5 px-6"
-            >
-              <User className="w-5 h-5" />
-              <span>Login</span>
-            </Button>
+          <Button
+            size="lg"
+            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white gap-2 !px-4 rounded-lg font-medium text-sm h-12"
+          >
+            <User className="w-5 h-5" />
+            <span>Login</span>
+          </Button>
         </div>
+
       </div>
     </nav>
   )

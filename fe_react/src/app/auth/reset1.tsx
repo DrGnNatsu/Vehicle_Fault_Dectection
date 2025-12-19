@@ -9,11 +9,10 @@ import { useState } from "react"
 
 export default function Reset1() {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("[v0] Registration submitted", { email, password})
+    console.log("[v0] Registration submitted", { email})
   }
 
   return (
@@ -84,7 +83,7 @@ export default function Reset1() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="team@mynaui.com"
+                  placeholder=" team@mynaui.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-10 bg-white text-gray-900 border border-gray-300 rounded-xl dark:bg-slate-900 dark:text-white dark:border-slate-700"

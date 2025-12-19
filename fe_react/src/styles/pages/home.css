@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+.cameras-page-container {
+  @apply min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-900;
+}
+
+.cameras-main {
+  @apply flex-1;
+}
+
+/* Header Styles */
+.header-section {
+  @apply w-full h-24 border-b border-border;
+}
+
+.header-content {
+  @apply max-w-full mx-auto px-4 py-2 flex justify-between items-center h-full;
+}
+
+.header-titles {
+  @apply flex flex-col gap-4;
+}
+
+.page-title {
+  @apply text-3xl text-blue-700 dark:text-sky-400 font-bold;
+}
+
+.page-subtitle {
+  @apply text-xl font-medium text-muted-foreground;
+}
+
+.btn-add-camera {
+  @apply h-10 px-6 bg-blue-600 hover:bg-blue-700 gap-1.5;
+}
+
+/* Grid Styles */
+.camera-grid-wrapper {
+  @apply max-w-full mx-auto p-4 !mt-12;
+}
+
+.camera-grid {
+  @apply flex gap-4 flex-wrap;
+}

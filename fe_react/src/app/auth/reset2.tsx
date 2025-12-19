@@ -1,21 +1,14 @@
 import Footer from "@/components/Footer"
 import BeforeNavigation from "@/components/BeforeNavigation"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Link } from "react-router-dom"
 import { Camera, CheckCircle2, BadgeCheck} from "lucide-react"
-import { useState } from "react"
 
 export default function Reset2() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("[v0] Registration submitted", { email, password})
+    console.log("[v0] Reset2 submitted")
   }
-
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Background split */}

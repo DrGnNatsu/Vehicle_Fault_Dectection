@@ -1,16 +1,14 @@
-import { useState } from 'react';
-import Home from './pages/home';
-import LandingPage from './pages/LandingPage';
-import Registration from './auth/registration';
-import Login from './auth/login';
-import Reset1 from './auth/reset1';
-import Reset2 from './auth/reset2';
-import Reset3 from './auth/reset3';
+import Home from "./pages/home";
+import AccountSetting from "./pages/account_setting";
+import Camera from "./pages/camera";
+import Documentation from "./pages/documentation";
+import Blog from "./pages/blog";
+import About from "./pages/about";
 
 function App() {
   return (
     <>
-      <Reset3/>
+      <Home />
     </>
   );
 }

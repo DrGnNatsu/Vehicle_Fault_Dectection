@@ -85,7 +85,7 @@ export default function Registration() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="team@mynaui.com"
+                  placeholder=" team@mynaui.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-10 bg-white text-gray-900 border border-gray-300 rounded-xl dark:bg-slate-900 dark:text-white dark:border-slate-700"
@@ -98,7 +98,7 @@ export default function Registration() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder=" ••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-10 bg-white text-gray-900 border border-gray-300 rounded-xl dark:bg-slate-900 dark:text-white dark:border-slate-700"
@@ -112,7 +112,7 @@ export default function Registration() {
                 <Input
                   id="confirmPassword"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder=" ••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="h-10 bg-white text-gray-900 border border-gray-300 rounded-xl dark:bg-slate-900 dark:text-white dark:border-slate-700"

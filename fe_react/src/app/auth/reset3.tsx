@@ -74,8 +74,8 @@ export default function Reset3() {
         <div className="w-1/2 flex items-center justify-center p-12">
           <div className="w-full max-w-md flex flex-col gap-6">
             <div>
-              <h2 className="text-blue-700 dark:text-sky-400 text-xl font-bold">Login</h2>
-              <p className="text-gray-700 dark:text-gray-200 text-sm">Enter your details below to login</p>
+              <h2 className="text-blue-700 dark:text-sky-400 text-xl font-bold">Set a New Password</h2>
+              <p className="text-gray-700 dark:text-gray-200 text-sm">Enter your new password and confirm it to set a new password.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -84,7 +84,7 @@ export default function Reset3() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder=" ••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-10 bg-white text-gray-900 border border-gray-300 rounded-xl dark:bg-slate-900 dark:text-white dark:border-slate-700"
@@ -98,7 +98,7 @@ export default function Reset3() {
                 <Input
                   id="confirmPassword"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder=" ••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="h-10 bg-white text-gray-900 border border-gray-300 rounded-xl dark:bg-slate-900 dark:text-white dark:border-slate-700"
