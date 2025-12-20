@@ -1,0 +1,29 @@
+@import "@/index.css";
+
+.blogContainer {
+    @apply min-h-screen flex flex-col bg-background text-foreground;
+}
+
+.blogMain {
+    @apply flex-1 flex flex-col w-full max-w-5xl mx-auto px-6 py-16 gap-12;
+}
+
+.blogHeader {
+    @apply flex flex-col gap-4 text-center mb-8;
+}
+
+.blogTitle {
+    @apply text-4xl md:text-5xl font-extrabold tracking-tight text-foreground;
+}
+
+.blogSubtitle {
+    @apply text-lg text-muted-foreground max-w-2xl mx-auto;
+}
+
+.versionList {
+    @apply flex flex-col gap-12;
+}
+
+.versionCardWrapper {
+    @apply w-full;
+}

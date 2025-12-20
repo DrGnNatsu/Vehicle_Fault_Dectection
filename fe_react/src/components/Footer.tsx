@@ -1,79 +1,81 @@
-import { Car, Twitter, Youtube, Linkedin, Disc3 } from "lucide-react";
-import { Link } from "react-router-dom";
+import {Car, Disc3, Linkedin, Twitter, Youtube} from "lucide-react";
+import {Link} from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import './css/Footer.css';
+
+const socialLinks = [
+    {
+        name: "Twitter",
+        href: "https://twitter.com",
+        icon: Twitter,
+    },
+    {
+        name: "Youtube",
+        href: "https://youtube.com",
+        icon: Youtube,
+    },
+    {
+        name: "Linkedin",
+        href: "https://linkedin.com",
+        icon: Linkedin,
+    },
+    {
+        name: "Discord",
+        href: "https://discord.com",
+        icon: Disc3,
+    },
+];
+
+const footerLinks = [
+    {
+        name: "Privacy Policy",
+        href: "/privacy",
+    },
+    {
+        name: "Terms of Service",
+        href: "/terms",
+    },
+];
 
 export default function Footer() {
-  return (
-    <footer className="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur border-t border-border shadow-[0_-2px_8px_rgba(0,0,0,0.08)] flex justify-center">
-      <div className="w-full !px-4 pt-12 flex flex-col gap-6">
-        {/* Logo */}
-        <div className="flex items-center gap-4">
-          <Car className="w-6 h-6 text-blue-600" strokeWidth={2} />
-          <h2 className="text-blue-600 text-base font-black">CarScript</h2>
-        </div>
+    return (
+        <footer className="footerContainer">
+            <div className="footerContent">
+                <div className="footerTop">
+                    {/* Logo */}
+                    <div className="brandSection">
+                        <Car className="logo" strokeWidth={2.5} />
+                        <span className="brandName">CarScript</span>
+                    </div>
 
-        {/* Social media (EXTERNAL) */}
-        <div className="flex items-center gap-4">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1  rounded-xl hover:bg-gray-100"
-          >
-            <Twitter className="w-6 h-6 text-gray-500" />
-          </a>
+                    {/* Social media (EXTERNAL) */}
+                    <div className="socialSection">
+                        {socialLinks.map((social) => (
+                            <Button key={social.name} variant="ghost" size="icon" asChild className="socialMediaLink">
+                                <a href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.name}>
+                                    <social.icon className="socialIcon" />
+                                </a>
+                            </Button>
+                        ))}
+                    </div>
+                </div>
 
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1  rounded-xl hover:bg-gray-100"
-          >
-            <Youtube className="w-6 h-6 text-gray-500" />
-          </a>
+                {/* Footer bottom */}
+                <div className="footerBottom">
+                    <p className="copyrightText">
+                        &copy; {new Date().getFullYear()} MLT Cooperation. All Rights Reserved.
+                    </p>
 
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1  rounded-xl hover:bg-gray-100"
-          >
-            <Linkedin className="w-6 h-6 text-gray-500" />
-          </a>
-
-          <a
-            href="https://discord.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1  rounded-xl hover:bg-gray-100"
-          >
-            <Disc3 className="w-6 h-6 text-gray-500" />
-          </a>
-        </div>
-
-        {/* Footer bottom */}
-        <div className="flex justify-between items-center">
-          <p className="text-gray-500 text-xs">
-            © 2025, MLT Cooperation. All Rights Reserved.
-          </p>
-
-          {/* Internal routes */}
-          <div className="flex items-center gap-2">
-            <Link
-              to="/privacy"
-              className="text-gray-500 text-xs hover:text-gray-700"
-            >
-              Privacy
-            </Link>
-            <span className="text-gray-500 text-xs">·</span>
-            <Link
-              to="/terms"
-              className="text-gray-500 text-xs hover:text-gray-700"
-            >
-              Terms
-            </Link>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+                    {/* Internal routes */}
+                    <div className="footerLinks">
+                        {footerLinks.map((link) => (
+                            <Link key={link.name} to={link.href} className="footerLink">
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
 }

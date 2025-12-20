@@ -1,74 +1,71 @@
-import { Camera, User } from "lucide-react";
-import { useState } from "react";
+import { Camera, User, Moon, Sun } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useThemeStore } from "@/store/themeStore";
+import './css/BeforeNavigation.css';
+
+const navData = {
+  brand: {
+    name: "CameraLanguage",
+    icon: Camera,
+    path: "/"
+  },
+  login: {
+    label: "Login",
+    icon: User,
+    path: "/login"
+  }
+};
 
 export default function BeforeNavigation() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleDarkMode, initTheme } = useThemeStore();
 
-  // ✅ Run ONCE on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-      setIsDarkMode(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setIsDarkMode(false);
-    }
-  }, []);
+    initTheme();
+  }, [initTheme]);
 
   const handleDarkModeToggle = (checked: boolean) => {
-    setIsDarkMode(checked);
-
-    if (checked) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+    toggleDarkMode(checked);
   };
 
-  return (
-    <nav className="w-full h-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-border shadow-md flex justify-center">
-      <div className="w-full !px-10 h-full flex items-center justify-between">
-        {/* Left Section: Logo */}
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 flex items-center justify-center">
-            <Camera className="w-10 h-10 text-blue-600" />
-          </div>
-          <h1 className="text-blue-600 text-4xl md:text-5xl font-extrabold font-sans leading-[48px]">
-            CameraLanguage
-          </h1>
-        </div>
+  const { brand, login } = navData;
 
-        <div className="flex items-center gap-6">
+  return (
+    <nav className="navContainer">
+      <div className="navContent">
+        {/* Left Section: Logo */}
+        <Link to={brand.path} className="navBrand">
+          <brand.icon className="navLogo" />
+          <h1 className="navTitle">{brand.name}</h1>
+        </Link>
+
+        <div className="navActions">
           {/* Dark Mode Toggle */}
-          <div className="flex items-center gap-3">
+          <div className="themeToggle">
+            {isDarkMode ? (
+              <Moon className="w-4 h-4 text-primary" />
+            ) : (
+              <Sun className="w-4 h-4 text-orange-500" />
+            )}
             <Switch
               checked={isDarkMode}
               onCheckedChange={handleDarkModeToggle}
-              className="data-[state=checked]:bg-blue-600"
+              aria-label="Toggle dark mode"
             />
-            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-              Darkmode
+            <span className="themeLabel">
+              {isDarkMode ? "Dark" : "Light"}
             </span>
           </div>
 
           {/* Login Button */}
-          <Link to="/login">
-            <Button
-              size="lg"
-              className="flex items-center bg-blue-600 hover:bg-blue-700 text-white gap-2 !px-4 rounded-lg font-medium text-sm h-12"
-            >
-              <User className="w-5 h-5" />
-              <span>Login</span>
-            </Button>
-          </Link>
+          <Button asChild className="loginButton">
+            <Link to={login.path}>
+              <login.icon className="loginIcon" />
+              <span>{login.label}</span>
+            </Link>
+          </Button>
         </div>
       </div>
     </nav>

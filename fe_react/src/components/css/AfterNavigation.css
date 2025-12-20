@@ -1,0 +1,49 @@
+@import "@/index.css";
+
+.afterNavContainer {
+  @apply sticky top-0 z-50 w-full h-20 bg-background/80 backdrop-blur border-b border-border shadow-sm flex justify-center;
+}
+
+.afterNavContent {
+  @apply w-full max-w-7xl px-4 h-full flex items-center justify-between relative;
+}
+
+.afterNavBrand {
+  @apply flex items-center;
+}
+
+.afterNavLogoLink {
+  @apply flex items-center gap-2 text-foreground hover:opacity-80 transition-opacity;
+}
+
+.afterNavLogo {
+  @apply w-6 h-6 text-primary transition-transform hover:scale-105;
+}
+
+.afterNavTitle {
+  @apply text-lg font-bold tracking-tight hidden sm:block;
+}
+
+.afterNavLinks {
+  @apply hidden md:flex items-center gap-8;
+}
+
+.afterNavItem {
+  @apply text-lg font-medium text-muted-foreground hover:text-primary transition-colors;
+}
+
+.afterNavItemActive {
+  @apply text-primary;
+}
+
+.afterNavActions {
+  @apply flex items-center gap-6;
+}
+
+.afterNavThemeToggle {
+  @apply flex items-center gap-3;
+}
+
+.afterNavThemeLabel {
+  @apply text-sm font-medium text-foreground hidden sm:inline;
+}

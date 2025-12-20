@@ -9,10 +9,10 @@ import Footer from "@/components/Footer";
 const Camera = () => {
   // Hacky Input get, will trigger a shit ton of re-render
   // too lazy to make form input, deal with it
-  const [commmand, setCommand] = useState<string>("");
+  const [command, setCommand] = useState<string>("");
   const handleClick = () => {
     console.log({
-      command: commmand,
+      command: command,
       shape: localStorage.getItem("shape"),
     });
   };

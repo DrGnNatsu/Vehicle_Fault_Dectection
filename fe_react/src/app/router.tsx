@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
-import Home from "./pages/home.tsx";
-import About from "./pages/about.tsx";
-import AccountSetting from "./pages/account_setting.tsx";
-import Blog from "./pages/blog.tsx";
+import Home from "./pages/Home.tsx";
+import AboutUs from "./pages/AboutUs.tsx";
+import AccountSetting from "./pages/MyAccount.tsx";
+import Blog from "./pages/Blog.tsx";
 import Camera from "./pages/Camera.tsx";
 import Documentation from "./pages/documentation.tsx";
 import LandingPage from "./pages/landingPage.tsx";
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
       { index: true, element: <LandingPage /> },
       { path: "home", element: <Home /> },
       { path: "landing", element: <LandingPage /> },
-      { path: "about", element: <About /> },
+      { path: "about", element: <AboutUs /> },
       { path: "account-settings", element: <AccountSetting /> },
       { path: "blog", element: <Blog /> },
       { path: "camera", element: <Camera /> },
