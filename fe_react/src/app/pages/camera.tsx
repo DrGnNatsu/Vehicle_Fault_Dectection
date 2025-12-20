@@ -1,18 +1,21 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import ReactPlayer from "react-player";
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import AfterNavigation from "@/components/AfterNavigation";
 import Footer from "@/components/Footer";
 
-const camera = () => {
+const Camera = () => {
+  // Hacky Input get, will trigger a shit ton of re-render
+  // too lazy to make form input, deal with it
+  const [commmand, setCommand] = useState<string>("");
+  const handleClick = () => {
+    console.log({
+      command: commmand,
+      shape: localStorage.getItem("shape"),
+    });
+  };
   return (
     <div className="h-screen p-4 bg-white dark:bg-gray-900 flex flex-col">
       <AfterNavigation />
@@ -38,8 +41,11 @@ const camera = () => {
 
           <div className="flex gap-2">
             {" "}
-            <Input placeholder="input code here"></Input>
-            <Button>Submit</Button>
+            <Input
+              onChange={(e) => setCommand(e.target.value)}
+              placeholder="input code here"
+            ></Input>
+            <Button onClick={handleClick}>Submit</Button>
           </div>
         </CardContent>
       </Card>
@@ -48,7 +54,7 @@ const camera = () => {
   );
 };
 
-export default camera;
+export default Camera;
 
 function CanvasDragRect() {
   const canvasRef = useRef(null);
@@ -97,6 +103,7 @@ function CanvasDragRect() {
 
   const onMouseUp = () => {
     setDragging(false);
+    localStorage.setItem("shape", JSON.stringify([startPos, currentPos]));
     // rectangle defined by `startPos` -> `currentPos`
     // you can now use these coords however you want
   };

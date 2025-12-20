@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/landingPage";
 import Home from "./pages/home";
@@ -8,7 +7,8 @@ import Blog from "./pages/blog";
 
 import Documentation from "./pages/documentation";
 import { Login, Registration, Reset1, Reset2, Reset3 } from "./auth/auth";
-import Camera from "./pages/camera";
+import Camera from "./pages/Camera";
+import NumberPlate from "./pages/NumberPlate";
 
 const App = () => {
   return (
@@ -28,6 +28,7 @@ const App = () => {
         <Route path="reset1" element={<Reset1 />} />
         <Route path="reset2" element={<Reset2 />} />
         <Route path="reset3" element={<Reset3 />} />
+        <Route path="plate" element={<NumberPlate />}></Route>
         <Route path="*" element={<Home />} />
       </Routes>
     </div>
