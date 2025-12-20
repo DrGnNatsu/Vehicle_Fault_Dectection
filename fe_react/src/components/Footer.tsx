@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <footer className="w-full bg-transparent flex justify-center ">
-      <div className="w-full !px-10 pt-12 flex flex-col gap-6">
+      <div className="w-full !px-4 pt-12 flex flex-col gap-6">
         {/* Logo */}
         <div className="flex items-center gap-4">
           <Car className="w-6 h-6 text-blue-600" strokeWidth={2} />

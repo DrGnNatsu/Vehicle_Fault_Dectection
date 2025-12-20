@@ -21,7 +21,7 @@ export default function AfterNavigation() {
   return (
     <nav className="w-full h-20 bg-transparent flex justify-center">
       {/* Container */}
-      <div className="w-full !px-10 h-full flex items-center justify-between">
+      <div className="w-full !px-4 h-full flex items-center justify-between">
         {/* Left: Logo */}
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 flex items-center justify-center">
@@ -37,6 +37,7 @@ export default function AfterNavigation() {
           <NavItem to="/blog" text="Blog" />
           <NavItem to="/documentation" text="Documentation" />
           <NavItem to="/about" text="About Us" />
+          <NavItem to="/search" text="Search" />
         </div>
 
         {/* Right: Dark Mode & Avatar */}

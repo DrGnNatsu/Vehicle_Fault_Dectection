@@ -5,7 +5,7 @@ import Home from "./pages/home";
 import About from "./pages/about";
 import AccountSetting from "./pages/account_setting";
 import Blog from "./pages/blog";
-
+import Search from "./pages/search";
 import Documentation from "./pages/documentation";
 import { Login, Registration, Reset1, Reset2, Reset3 } from "./auth/auth";
 import Camera from "./pages/camera";
@@ -28,6 +28,7 @@ const App = () => {
         <Route path="reset1" element={<Reset1 />} />
         <Route path="reset2" element={<Reset2 />} />
         <Route path="reset3" element={<Reset3 />} />
+        <Route path="search" element={<Search />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </div>

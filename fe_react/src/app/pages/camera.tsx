@@ -16,7 +16,7 @@ const camera = () => {
   return (
     <div className="h-screen p-4 bg-white dark:bg-gray-900 flex flex-col">
       <AfterNavigation />
-      <Card className="border-border flex-1 mb-4 overflow-hidden">
+      <Card className="border-border h-full">
         <CardHeader>
           <CardTitle>Camera Name</CardTitle>
         </CardHeader>
