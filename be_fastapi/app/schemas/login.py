@@ -15,5 +15,9 @@ class LoginResponseDTO(BaseModel):
 
 
 class LoginRequestDTO(BaseModel):
-    email: EmailStr
+    email: EmailStr = Field(..., alias="username")
     password: str = Field(..., min_length=1)
+
+    class Config:
+        allow_population_by_field_name = True
+        populate_by_name = True

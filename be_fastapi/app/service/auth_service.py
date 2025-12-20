@@ -44,7 +44,7 @@ class AuthService:
 
         return LoginResponseDTO(
             jwt_token=access_token,
-            role=user.role
+            role=user.role # type: ignore
         )
 
     """

@@ -3,7 +3,7 @@ from app.models.rule import Rule
 from app.models.zone import Zone
 from app.models.violation import Violation
 from app.engine.dsl.evaluator import DSLEvaluator
-from be_fastapi.app.utils.evidence.evidence import save_snapshot
+from app.utils.evidence.evidence import save_snapshot
 from app.websockets.manager import manager
 from shapely.geometry import Point, Polygon
 from datetime import datetime

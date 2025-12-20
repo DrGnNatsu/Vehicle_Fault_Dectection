@@ -1,12 +1,12 @@
 from antlr4 import InputStream, CommonTokenStream
-from CompiledFiles.ViolationsLexer import ViolationsLexer
-from CompiledFiles.ViolationsParser import ViolationsParser
-from CompiledFiles.ViolationsVisitor import ViolationsVisitor
+from app.engine.dsl.CompiledFiles.ViolationsLexer import ViolationsLexer
+from app.engine.dsl.CompiledFiles.ViolationsParser import ViolationsParser
+from app.engine.dsl.CompiledFiles.ViolationsVisitor import ViolationsVisitor
 from shapely.geometry import Point, Polygon
-from typing import Dict, Any, List
+from typing import Dict, Any, Optional
 
 class DSLEvaluator(ViolationsVisitor):
-    def __init__(self, object_data: Dict[str, Any], zones: Dict[str, Polygon], scene_data: Dict[str, Any] = None):
+    def __init__(self, object_data: Dict[str, Any], zones: Dict[str, Polygon], scene_data: Optional[Dict[str, Any]] = None):
         super().__init__()
         self.object_data = object_data or {}
         self.zones = zones or {}

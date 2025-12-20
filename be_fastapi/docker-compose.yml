@@ -22,10 +22,13 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgresql+psycopg2://postgres:postgres@db:5432/vehicle_fault_db"
+      DATABASE_URL_APP: "postgresql+psycopg2://postgres:postgres@db:5432/vehicle_fault_db"
     ports:
       - "8000:8000"
     volumes:
       - ./alembic/versions:/app/alembic/versions
+      - .:/app
+      - ../videos:/app/videos
 
 volumes:
   pg_data:

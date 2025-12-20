@@ -9,10 +9,10 @@ from app.schemas.assignment import (
     SourceAssignmentInfo,
     PoliceAssignmentInfo
 )
-from be_fastapi.app.api.v1.dependencies import require_admin, require_police, get_current_user
+from app.api.v1.dependencies import require_admin, require_police, get_current_user
 from app.models.user import User
 
-router = APIRouter(prefix="/api/assignments", tags=["assignments"])
+router = APIRouter(prefix="/assignments", tags=["assignments"])
 
 
 @router.post("", response_model=AssignmentResponse, status_code=status.HTTP_200_OK)

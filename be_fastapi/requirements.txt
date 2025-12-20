@@ -6,7 +6,7 @@ alembic
 pydantic-settings
 python-multipart
 python-dotenv
-passlib[bcrypt]  # cho hash password (bcrypt)
-PyJWT  # cho JWT token
+passlib[argon2]  # cho hash password (argon2)
+argon2-cffi  # backend cho argon2
 PyJWT  # cho JWT token
 pydantic[email]
