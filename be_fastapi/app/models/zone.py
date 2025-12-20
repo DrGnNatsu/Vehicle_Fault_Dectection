@@ -5,16 +5,17 @@ from .base import Base
 class Zone(Base):
     __tablename__ = "zones"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v7()"))
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuidv7()"))
     name = Column(String, nullable=False)
 
-    camera_id = Column(
+    source_id = Column(
         UUID(as_uuid=True),
-        ForeignKey("cameras.id", ondelete="CASCADE"),
-        nullable=False
+        ForeignKey("sources.id", ondelete="CASCADE"),
+        nullable=False, 
+        index=True
     )
 
     coordinates = Column(JSONB, nullable=False)
 
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"))
-    updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"))
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"), onupdate=text("NOW()"))
