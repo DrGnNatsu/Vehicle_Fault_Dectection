@@ -1,69 +1,109 @@
-import AfterNavigation from "@/components/AfterNavigation";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import ReactPlayer from "react-player";
+import React, { useRef, useState, useEffect } from "react";
 
-export default function Camera() {
-    const handleEditCamera = () => {
-        console.log("[v0] Edit camera");
-    }
-    const handleDeleteCamera = () => {
-        console.log("[v0] Delete camera");
-    }
+const camera = () => {
+  return (
+    <div className="h-screen p-4">
+      <Card className="border-border h-full">
+        <CardHeader>
+          <CardTitle>Camera Name</CardTitle>
+        </CardHeader>
+        <CardContent className="h-4/5">
+          <div className=" w-full h-full flex items-center justify-center mb-4">
+            <div className="relative w-full h-full">
+              <ReactPlayer
+                src="https://www.youtube.com/watch?v=eH3giaIzONA"
+                className="absolute inset-0"
+                width="100%"
+                height="100%"
+                autoPlay={true}
+              />
+              <div className="absolute inset-0 z-10 bg-transparent">
+                <CanvasDragRect />
+              </div>
+            </div>
+          </div>
 
-    return (
-        <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-            {/* Top Navigation */}
-            <AfterNavigation />
-            <main className="flex-1 flex flex-col">
-                {/* Page Header Section */}
-                <div className="w-full border-b border-border bg-white dark:bg-gray-900">
-                    <div className="max-w-full mx-auto !px-4 !py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        {/* Title & Description */}
-                        <div className="flex flex-col gap-1">
-                            <h1 className="text-3xl font-bold leading-9 text-blue-600 dark:text-sky-400">
-                                Camera Title
-                            </h1>
-                            <p className="text-xl font-medium text-muted-foreground leading-7">
-                                Description
-                            </p>
-                        </div>
+          <div className="flex gap-2">
+            {" "}
+            <Input placeholder="input code here"></Input>
+            <Button>Submit</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
-                        {/* Action Buttons */}
-                        <div className="flex items-center gap-4">
-                            <Button 
-                                onClick={handleEditCamera} 
-                                className="w-24 h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg"
-                            >
-                                Edit
-                            </Button>
-                            <Button 
-                                onClick={handleDeleteCamera} 
-                                variant="destructive"
-                                className="w-24 h-10 bg-red-600 hover:bg-red-700 text-white font-medium text-sm rounded-lg"
-                            >
-                                Delete
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+export default camera;
 
-                {/* Main Content */}
-                <div className="w-full mx-auto !p-4">
-                    <div className="flex flex-col lg:flex-row gap-4 h-full">
-                        <div className="flex-1 min-h-[600px] p-2.5 bg-gray-500 rounded-lg border border-border relative">
-                            <textarea 
-                                className="w-full h-full  resize-none focus:outline-none text-base text-foreground placeholder:text-muted-foreground font-normal leading-6"
-                                placeholder="Please write your query here"
-                            />
-                        </div>
-                        <div className="w-full lg:w-[500px] rounded-lg min-h-[600px] bg-gray-500 border border-border relative">
-                            {/* Placeholder for the empty container in design */}
-                        </div>
-                    </div>
-                </div>
-            </main>
+function CanvasDragRect() {
+  const canvasRef = useRef(null);
 
-            <Footer />
-        </div>
-    );
+  const [dragging, setDragging] = useState(false);
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const [currentPos, setCurrentPos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  }, []);
+
+  const getMousePos = (e) => {
+    const rect = canvasRef.current.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+  };
+
+  const onMouseDown = (e) => {
+    setDragging(true);
+    setStartPos(getMousePos(e));
+  };
+
+  const onMouseMove = (e) => {
+    if (!dragging) return;
+    setCurrentPos(getMousePos(e));
+
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+    const x = Math.min(startPos.x, currentPos.x);
+    const y = Math.min(startPos.y, currentPos.y);
+    const w = Math.abs(startPos.x - currentPos.x);
+    const h = Math.abs(startPos.y - currentPos.y);
+
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, w, h); // draw selection
+  };
+
+  const onMouseUp = () => {
+    setDragging(false);
+    // rectangle defined by `startPos` -> `currentPos`
+    // you can now use these coords however you want
+  };
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="w-full h-full  border-border"
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+    />
+  );
 }
