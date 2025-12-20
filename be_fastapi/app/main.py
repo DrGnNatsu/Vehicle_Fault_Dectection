@@ -7,7 +7,8 @@ from app.core.cors import setup_cors
 from app.exception.base_exception import AppException
 from app.exception.handlers import app_exception_handler
 
-from app.api import assignments, sources
+from be_fastapi.app.api.v1 import sources
+from be_fastapi.app.api.v1 import assignments
 
 app = FastAPI(
     title="Vehicle Fault Detection API",
