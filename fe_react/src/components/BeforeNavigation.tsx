@@ -3,15 +3,27 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function BeforeNavigation() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // ... (Keep your existing useEffect/Handlers here) ...
+  // ✅ Run ONCE on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
 
-  // Toggle dark mode handler
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
+    }
+  }, []);
+
   const handleDarkModeToggle = (checked: boolean) => {
     setIsDarkMode(checked);
+
     if (checked) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -22,8 +34,7 @@ export default function BeforeNavigation() {
   };
 
   return (
-    <nav className="w-full h-20 bg-transparent flex justify-center border-b border-gray-100 dark:border-gray-800">
-      {/* 2. Inner Container: Matches Figma's 1440px width, but shrinks on smaller screens */}
+    <nav className="w-full h-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-border shadow-md flex justify-center">
       <div className="w-full !px-10 h-full flex items-center justify-between">
         {/* Left Section: Logo */}
         <div className="flex items-center gap-4">

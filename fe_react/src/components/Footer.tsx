@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-transparent flex justify-center ">
+    <footer className="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur border-t border-border shadow-[0_-2px_8px_rgba(0,0,0,0.08)] flex justify-center">
       <div className="w-full !px-4 pt-12 flex flex-col gap-6">
         {/* Logo */}
         <div className="flex items-center gap-4">
