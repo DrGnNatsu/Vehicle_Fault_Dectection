@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { MoreVertical, Trash2, Plus, Settings} from "lucide-react"
+import { Trash2, Plus, Settings} from "lucide-react"
 
 interface CameraCardProps {
   title?: string

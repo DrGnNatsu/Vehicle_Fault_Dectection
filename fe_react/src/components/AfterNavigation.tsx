@@ -1,11 +1,11 @@
-import { Camera} from "lucide-react"
+import { Camera } from "lucide-react"
 import { useState } from "react"
+import { NavLink as RouterNavLink } from "react-router-dom"
 import { Switch } from "@/components/ui/switch"
+import { Link } from "react-router-dom"
 
 export default function AfterNavigation() {
   const [isDarkMode, setIsDarkMode] = useState(false)
-
-  // ... (Keep your existing useEffect/Handlers here) ... 
   
   const handleDarkModeToggle = (checked: boolean) => {
     setIsDarkMode(checked)
@@ -32,10 +32,10 @@ export default function AfterNavigation() {
 
         {/* Center: Links (FIXED) */}
         <div className="hidden md:flex items-center gap-8">
-            <NavLink text="Your Camera" />
-            <NavLink text="Blog" />
-            <NavLink text="Documentation" />
-            <NavLink text="About Us" />
+          <NavItem to="/camera" text="Your Camera" />
+          <NavItem to="/blog" text="Blog" />
+          <NavItem to="/documentation" text="Documentation" />
+          <NavItem to="/about" text="About Us" />
         </div>
 
         {/* Right: Dark Mode & Avatar */}
@@ -53,11 +53,13 @@ export default function AfterNavigation() {
           </div>
 
           <div className="w-12 h-12">
-            <img 
-              className="w-full h-full rounded-full object-cover border border-gray-200" 
-              src="https://placehold.co/48x48" 
-              alt="User Profile"
-            />
+            <Link to="/account-settings">
+              <img 
+                className="w-full h-full rounded-full object-cover border border-gray-200" 
+                src="https://placehold.co/48x48" 
+                alt="User Profile"
+              />
+            </Link>     
           </div>            
         </div>
 
@@ -67,13 +69,16 @@ export default function AfterNavigation() {
 }
 
 // Helper component for the links to keep code clean
-function NavLink({ text }: { text: string }) {
+function NavItem({ to, text }: { to: string; text: string }) {
   return (
-    <a 
-      href="#" 
-      className="text-gray-900 dark:text-gray-100 text-lg font-medium hover:text-blue-600 transition-colors"
+    <RouterNavLink
+      to={to}
+      className={({ isActive }) =>
+        (isActive ? "text-blue-600" : "text-gray-900 dark:text-gray-100") +
+        " text-lg font-medium hover:text-blue-600 transition-colors"
+      }
     >
       {text}
-    </a>
+    </RouterNavLink>
   )
 }

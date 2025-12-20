@@ -8,7 +8,6 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
     "esModuleInterop": false,
-    "ignoreDeprecations": "6.0",
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "resolveJsonModule": true,

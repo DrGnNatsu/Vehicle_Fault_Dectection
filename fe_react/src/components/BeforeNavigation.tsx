@@ -1,5 +1,5 @@
-import { Camera, User } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Camera, Link, User } from "lucide-react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 
@@ -53,8 +53,10 @@ export default function BeforeNavigation() {
             size="lg"
             className="flex items-center bg-blue-600 hover:bg-blue-700 text-white gap-2 !px-4 rounded-lg font-medium text-sm h-12"
           >
-            <User className="w-5 h-5" />
-            <span>Login</span>
+            <Link to="/login">
+              <User className="w-5 h-5" />
+              <span>Login</span>
+            </Link>
           </Button>
         </div>
 
