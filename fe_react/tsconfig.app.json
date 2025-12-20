@@ -7,13 +7,13 @@
     "module": "ES2022",
     "types": ["vite/client"],
     "skipLibCheck": true,
-    "esModuleInterop": false,
+ //   "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+ //   "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },

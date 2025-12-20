@@ -9,11 +9,14 @@ import {
 import { Input } from "@/components/ui/input";
 import ReactPlayer from "react-player";
 import React, { useRef, useState, useEffect } from "react";
+import AfterNavigation from "@/components/AfterNavigation";
+import Footer from "@/components/Footer";
 
 const camera = () => {
   return (
-    <div className="h-screen p-4">
-      <Card className="border-border h-full">
+    <div className="h-screen p-4 bg-white dark:bg-gray-900 flex flex-col">
+      <AfterNavigation />
+      <Card className="border-border flex-1 mb-4 overflow-hidden">
         <CardHeader>
           <CardTitle>Camera Name</CardTitle>
         </CardHeader>
@@ -21,7 +24,7 @@ const camera = () => {
           <div className=" w-full h-full flex items-center justify-center mb-4">
             <div className="relative w-full h-full">
               <ReactPlayer
-                src="https://www.youtube.com/watch?v=eH3giaIzONA"
+                src="https://www.youtube.com/watch?v=CaMkzNXwVcE"
                 className="absolute inset-0"
                 width="100%"
                 height="100%"
@@ -40,6 +43,7 @@ const camera = () => {
           </div>
         </CardContent>
       </Card>
+      <Footer />
     </div>
   );
 };

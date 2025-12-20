@@ -1,21 +1,21 @@
-import AfterNavigation from "@/components/AfterNavigation"
-import Footer from "@/components/Footer"
-import { CameraCard } from "@/components/camera-card"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import AfterNavigation from "@/components/AfterNavigation";
+import Footer from "@/components/Footer";
+import { CameraCard } from "@/components/camera-card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
-export default function CamerasPage() {
+export default function Home() {
   const handleCheckCamera = (cameraId: number) => {
-    console.log("[v0] Check camera:", cameraId)
-  }
+    console.log("[v0] Check camera:", cameraId);
+  };
 
   const handleDeleteCamera = (cameraId: number) => {
-    console.log("[v0] Delete camera:", cameraId)
-  }
+    console.log("[v0] Delete camera:", cameraId);
+  };
 
   const handleAddCamera = () => {
-    console.log("[v0] Add new camera")
-  }
+    console.log("[v0] Add new camera");
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-900">
@@ -25,10 +25,17 @@ export default function CamerasPage() {
         <div className="w-full h-24 border-b border-border">
           <div className="max-w-full mx-auto px-4 py-2 flex justify-between items-center h-full">
             <div className="flex flex-col gap-4">
-              <h1 className="text-3xl text-blue-700 dark:text-sky-400 font-bold">Manage your camera</h1>
-              <p className="text-xl font-medium text-muted-foreground">Explore your camera here</p>
+              <h1 className="text-3xl text-blue-700 dark:text-sky-400 font-bold">
+                Manage your camera
+              </h1>
+              <p className="text-xl font-medium text-muted-foreground">
+                Explore your camera here
+              </p>
             </div>
-            <Button onClick={handleAddCamera} className="h-10 px-6 bg-blue-600 hover:bg-blue-700 gap-1.5">
+            <Button
+              onClick={handleAddCamera}
+              className="h-10 px-6 bg-blue-600 hover:bg-blue-700 gap-1.5"
+            >
               <Plus className="w-5 h-5" />
               Add new Camera
             </Button>
@@ -62,5 +69,5 @@ export default function CamerasPage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
