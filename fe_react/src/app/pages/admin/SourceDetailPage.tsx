@@ -84,7 +84,7 @@ const SourceDetailPage: React.FC = () => {
       setError(
         err.response?.data?.detail ||
           err.message ||
-          "Không thể tải dữ liệu camera. Vui lòng kiểm tra kết nối Backend."
+          "Failed to load source data"
       );
     }
   };
@@ -95,7 +95,7 @@ const SourceDetailPage: React.FC = () => {
       setIsProcessing(true);
     } catch (e) {
       console.error("Failed to start processing", e);
-      alert("Không thể bắt đầu xử lý (có thể tiến trình đang chạy rồi)");
+      alert("Failed to start processing");
     }
   };
 
@@ -130,7 +130,7 @@ const SourceDetailPage: React.FC = () => {
         parsedCoords = JSON.parse(dimInput);
       } catch (e) {
         alert(
-          "Tọa độ không hợp lệ. Phải là dạng JSON array [[x,y],...] hoặc np.array([[x,y],...])"
+          "Invalid coordinates. Must be a JSON array [[x,y],...] or np.array([[x,y],...])"
         );
         return;
       }
@@ -144,18 +144,18 @@ const SourceDetailPage: React.FC = () => {
       fetchData(); // Reload
     } catch (error) {
       console.error("Failed to add zone", error);
-      alert("Thêm vùng thất bại");
+      alert("Failed to add zone");
     }
   };
 
   const handleDeleteZone = async (zoneId: string) => {
-    if (!window.confirm("Bạn có chắc muốn xóa vùng này không?")) return;
+    if (!window.confirm("Are you sure you want to delete this zone?")) return;
     try {
       await axiosInstance.delete(`/api/v1/zones/${zoneId}`);
       fetchData();
     } catch (error) {
       console.error("Failed to delete zone", error);
-      alert("Xóa vùng thất bại");
+      alert("Failed to delete zone");
     }
   };
 
@@ -171,18 +171,18 @@ const SourceDetailPage: React.FC = () => {
       fetchData();
     } catch (error) {
       console.error("Failed to add rule", error);
-      alert("Thêm luật thất bại");
+      alert("Failed to add rule");
     }
   };
 
   const handleDeleteRule = async (ruleId: string) => {
-    if (!window.confirm("Bạn có chắc muốn xóa luật này không?")) return;
+    if (!window.confirm("Are you sure you want to delete this rule?")) return;
     try {
       await axiosInstance.delete(`/api/v1/sources/${id}/rules/${ruleId}`);
       fetchData();
     } catch (error) {
       console.error("Failed to delete rule", error);
-      alert("Xóa luật thất bại");
+      alert("Failed to delete rule");
     }
   };
 
@@ -192,19 +192,19 @@ const SourceDetailPage: React.FC = () => {
         <AfterNavigation />
         <div className="flex-1 flex flex-col justify-center items-center text-red-500 gap-4">
           <AlertTriangle size={48} />
-          <h2 className="text-xl font-bold">Lỗi Tải Dữ Liệu Camera</h2>
+          <h2 className="text-xl font-bold">Failed to load source data</h2>
           <p>{error}</p>
           <button
             onClick={fetchData}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Thử lại
+            Try again
           </button>
           <button
             onClick={handleBack}
             className="text-gray-600 hover:underline"
           >
-            Quay lại
+            Back
           </button>
         </div>
         <Footer />
@@ -217,7 +217,7 @@ const SourceDetailPage: React.FC = () => {
         <AfterNavigation />
         <div className="flex-1 flex justify-center items-center gap-2">
           <Loader2 className="animate-spin text-blue-600" size={32} />
-          <span className="text-gray-500">Đang tải dữ liệu...</span>
+          <span className="text-gray-500">Loading data...</span>
         </div>
         <Footer />
       </div>
@@ -250,20 +250,20 @@ const SourceDetailPage: React.FC = () => {
           <div className="flex gap-2">
             {isProcessing && (
               <span className="flex items-center text-green-500 text-sm mr-2 font-medium">
-                <Loader2 size={16} className="animate-spin mr-1" /> ĐANG XỬ LÝ
+                <Loader2 size={16} className="animate-spin mr-1" /> Processing
               </span>
             )}
             <button
               onClick={handleStartProcessing}
               className="flex items-center gap-2 px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-bold shadow-sm"
             >
-              <Play size={16} /> Bắt đầu AI
+              <Play size={16} /> Start AI
             </button>
             <button
               onClick={handleStopProcessing}
               className="flex items-center gap-2 px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 text-sm shadow-sm"
             >
-              <Square size={16} /> Dừng
+              <Square size={16} /> Stop AI
             </button>
             <button
               onClick={fetchData}
@@ -295,17 +295,17 @@ const SourceDetailPage: React.FC = () => {
             <div className="mt-4 text-gray-400 text-sm p-4 bg-gray-800 rounded w-full border border-gray-700">
               <h4 className="font-semibold text-white mb-2 flex items-center gap-2">
                 <AlertTriangle size={16} className="text-yellow-500" />
-                Hướng dẫn Demo
+                Demo Guide
               </h4>
               <p className="mb-1">
-                1. Nhấn <b>Bắt đầu AI</b> để chạy phân tích.
+                1. Click <b>Start AI</b> to run analysis.
               </p>
               <p className="mb-1">
-                2. Thêm Vùng (Zone) ở bên phải (hỗ trợ dán <code>np.array</code>
+                2. Add Zone (Zone) on the right (supports pasting <code>np.array</code>
                 ).
               </p>
-              <p className="mb-1">3. Thêm Luật (Rule) sử dụng DSL.</p>
-              <p>4. Các lỗi vi phạm sẽ hiện khung ĐỎ trên video.</p>
+              <p className="mb-1">3. Add Rule (Rule) using DSL.</p>
+              <p>4. Violations will be highlighted in red on the video.</p>
             </div>
           </div>
 
@@ -315,7 +315,7 @@ const SourceDetailPage: React.FC = () => {
             <div className="flex-1 p-4 border-b border-gray-200 dark:border-gray-700 overflow-y-auto">
               <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
                 <span className="w-1 h-6 bg-blue-500 rounded-full"></span>
-                Cấu hình Vùng (Zones)
+                Zone Configuration
               </h3>
               {/* Add Zone Form */}
               <div className="bg-blue-50 dark:bg-gray-900 p-3 rounded-lg border border-blue-100 dark:border-gray-700 mb-4">
@@ -338,7 +338,7 @@ const SourceDetailPage: React.FC = () => {
                     disabled={!newZoneName}
                     className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-1.5 rounded hover:bg-blue-700 text-sm font-medium shadow-sm transition-colors"
                   >
-                    <Save size={14} /> Lưu Vùng
+                    <Save size={14} /> Save Zone
                   </button>
                 </div>
               </div>
@@ -367,7 +367,7 @@ const SourceDetailPage: React.FC = () => {
                 ))}
                 {zones.length === 0 && (
                   <p className="text-gray-400 text-sm text-center italic py-2">
-                    Chưa có vùng nào được tạo.
+                    No zones created.
                   </p>
                 )}
               </div>
@@ -377,7 +377,7 @@ const SourceDetailPage: React.FC = () => {
             <div className="flex-1 p-4 overflow-y-auto bg-gray-50/50 dark:bg-gray-900/30">
               <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
                 <span className="w-1 h-6 bg-purple-500 rounded-full"></span>
-                Luật Kiểm Tra (Rules)
+                Rules Configuration
               </h3>
               {/* Add Rule Form */}
               <div className="bg-purple-50 dark:bg-gray-900 p-3 rounded-lg border border-purple-100 dark:border-gray-700 mb-4">
@@ -400,7 +400,7 @@ const SourceDetailPage: React.FC = () => {
                     disabled={!newRuleName}
                     className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white py-1.5 rounded hover:bg-purple-700 text-sm font-medium shadow-sm transition-colors"
                   >
-                    <Save size={14} /> Thêm Luật
+                    <Save size={14} /> Add Rule
                   </button>
                 </div>
               </div>
@@ -429,7 +429,7 @@ const SourceDetailPage: React.FC = () => {
                 ))}
                 {rules.length === 0 && (
                   <p className="text-gray-400 text-sm text-center italic py-2">
-                    Chưa có luật nào.
+                    No rules created.
                   </p>
                 )}
               </div>
