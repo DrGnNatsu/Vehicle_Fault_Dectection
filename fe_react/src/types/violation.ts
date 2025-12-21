@@ -14,3 +14,13 @@ export interface ViolationListResponse {
   skip: number;
   limit: number;
 }
+
+export interface ViolationFilterParams {
+  source_id?: string;
+  rule_id?: string;
+  date_from?: string;
+  date_to?: string;
+  license_plate?: string;
+  skip?: number;
+  limit?: number;
+}

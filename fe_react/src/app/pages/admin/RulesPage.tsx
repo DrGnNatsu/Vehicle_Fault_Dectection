@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2, RefreshCcw, AlertCircle, FileText } from "lucide-react";
+import { Plus, Trash2, RefreshCcw, AlertCircle, FileText, Pencil } from "lucide-react";
 import AfterNavigation from "@/components/AfterNavigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,8 +34,9 @@ export default function RulesPage() {
   const [error, setError] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingRuleId, setEditingRuleId] = useState<string | null>(null);
 
-  const [newRule, setNewRule] = useState<CreateRulePayload>({
+  const [currentRuleData, setCurrentRuleData] = useState<CreateRulePayload>({
     name: "",
     dsl_content: "",
   });
@@ -70,17 +71,35 @@ export default function RulesPage() {
     });
   };
 
-  const handleCreateRule = async (e: React.FormEvent) => {
+  const handleOpenCreateModal = () => {
+    setEditingRuleId(null);
+    setCurrentRuleData({ name: "", dsl_content: "" });
+    setIsCreateModalOpen(true);
+  };
+
+  const handleEditRule = (rule: Rule) => {
+    setEditingRuleId(rule.id);
+    setCurrentRuleData({ name: rule.name, dsl_content: rule.dsl_content });
+    setIsCreateModalOpen(true);
+  };
+
+  const handleSubmitRule = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const created = await ruleService.createRule(newRule);
-      setRules((prev) => [created, ...prev]);
+      if (editingRuleId) {
+        const updated = await ruleService.updateRule(editingRuleId, currentRuleData);
+        setRules((prev) => prev.map((r) => (r.id === editingRuleId ? updated : r)));
+      } else {
+        const created = await ruleService.createRule(currentRuleData);
+        setRules((prev) => [created, ...prev]);
+      }
       setIsCreateModalOpen(false);
-      setNewRule({ name: "", dsl_content: "" });
+      setCurrentRuleData({ name: "", dsl_content: "" });
+      setEditingRuleId(null);
     } catch (err: any) {
-      console.error("Failed to create rule:", err);
-      alert("Failed to create rule. Please check your DSL syntax.");
+      console.error("Failed to save rule:", err);
+      alert("Failed to save rule. Please check your DSL syntax.");
     } finally {
       setIsSubmitting(false);
     }
@@ -125,15 +144,15 @@ export default function RulesPage() {
             
             <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
               <DialogTrigger asChild>
-                <Button className="gap-2">
+                <Button className="gap-2" onClick={handleOpenCreateModal}>
                   <Plus className="w-4 h-4" />
                   Create Rule
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[600px]">
-                <form onSubmit={handleCreateRule}>
+                <form onSubmit={handleSubmitRule}>
                   <DialogHeader>
-                    <DialogTitle>Create Detection Rule</DialogTitle>
+                    <DialogTitle>{editingRuleId ? "Edit Detection Rule" : "Create Detection Rule"}</DialogTitle>
                     <DialogDescription>
                       Define the logic for detecting violations using the Domain Specific Language (DSL).
                     </DialogDescription>
@@ -146,8 +165,8 @@ export default function RulesPage() {
                         id="name"
                         required
                         placeholder="e.g., Wrong Way Detection"
-                        value={newRule.name}
-                        onChange={(e) => setNewRule({ ...newRule, name: e.target.value })}
+                        value={currentRuleData.name}
+                        onChange={(e) => setCurrentRuleData({ ...currentRuleData, name: e.target.value })}
                       />
                     </div>
                     <div className="grid gap-2">
@@ -155,10 +174,10 @@ export default function RulesPage() {
                       <Textarea
                         id="dsl"
                         required
-                        className="min-h-[200px] font-mono text-xs"
+                        className="min-h-[200px] font-mono text-base"
                         placeholder="IF vehicle.direction != lane.direction THEN violation(type='wrong_way')"
-                        value={newRule.dsl_content}
-                        onChange={(e) => setNewRule({ ...newRule, dsl_content: e.target.value })}
+                        value={currentRuleData.dsl_content}
+                        onChange={(e) => setCurrentRuleData({ ...currentRuleData, dsl_content: e.target.value })}
                       />
                     </div>
                   </div>
@@ -168,7 +187,7 @@ export default function RulesPage() {
                       Cancel
                     </Button>
                     <Button type="submit" disabled={isSubmitting}>
-                      {isSubmitting ? "Creating..." : "Save Rule"}
+                      {isSubmitting ? "Saving..." : (editingRuleId ? "Update Rule" : "Save Rule")}
                     </Button>
                   </DialogFooter>
                 </form>
@@ -193,11 +212,11 @@ export default function RulesPage() {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="w-[200px]">Name</TableHead>
+                  <TableHead className="w-[14rem]">Name</TableHead>
                   <TableHead>DSL Preview</TableHead>
-                  <TableHead className="w-[120px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Created At</TableHead>
-                  <TableHead className="text-right w-[100px]">Actions</TableHead>
+                  <TableHead className="w-[14rem]">Status</TableHead>
+                  <TableHead className="w-[14rem]">Created At</TableHead>
+                  <TableHead className="text-right w-[14rem]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -212,7 +231,7 @@ export default function RulesPage() {
                     <TableRow key={rule.id} className="group">
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-primary/70" />
+                          <FileText className="w-4 h-4 text-primary/70 text-lg" />
                           {rule.name}
                         </div>
                       </TableCell>
@@ -220,7 +239,7 @@ export default function RulesPage() {
                         <code 
                           onClick={() => toggleExpand(rule.id)}
                           className={cn(
-                            "text-xs bg-muted px-1.5 py-1 rounded text-muted-foreground block border border-transparent hover:border-border transition-all cursor-pointer",
+                            "text-base bg-muted px-1.5 py-1 rounded text-muted-foreground block border border-transparent hover:border-border transition-all cursor-pointer",
                             expandedRules.has(rule.id) ? "whitespace-pre-wrap break-all pr-4" : "truncate max-w-[200px]"
                           )}
                           title={!expandedRules.has(rule.id) ? "Click to expand" : "Click to collapse"}
@@ -235,23 +254,31 @@ export default function RulesPage() {
                             onCheckedChange={() => handleToggleStatus(rule)}
                           />
                           {rule.is_active ? (
-                            <span className="text-[10px] uppercase font-bold text-green-500">Active</span>
+                            <span className="text-xs uppercase font-bold text-green-500">Active</span>
                           ) : (
-                            <span className="text-[10px] uppercase font-bold text-muted-foreground">Inactive</span>
+                            <span className="text-xs uppercase font-bold text-muted-foreground">Inactive</span>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-muted-foreground text-xs">
+                      <TableCell className="text-muted-foreground text-base">
                         {new Date(rule.created_at).toLocaleString()}
                       </TableCell>
                       <TableCell className="text-right">
                         <Button 
                           variant="ghost" 
                           size="icon" 
+                          className="mr-1 text-muted-foreground hover:text-primary"
+                          onClick={() => handleEditRule(rule)}
+                        >
+                          <Pencil className="w-12 h-12" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
                           className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           onClick={() => handleDeleteRule(rule.id)}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-12 h-12" />
                         </Button>
                       </TableCell>
                     </TableRow>

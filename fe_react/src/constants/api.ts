@@ -20,5 +20,6 @@ export const API_ENDPOINTS = {
   VIOLATIONS: {
     BASE: '/api/v1/violations',
     DETAILS: (id: string) => `/api/v1/violations/${id}`,
+    MY: '/api/v1/violations/my',
   },
 };
