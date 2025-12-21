@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import AboutCard from "@/components/AboutCard.tsx";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '@/app/css/AboutUs.css';
 
 const featureData = [
@@ -33,6 +33,7 @@ const featureData = [
 
 export default function AboutUsPage() {
   const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
   
   return (
     <div className="aboutUsContainer">
@@ -50,20 +51,20 @@ export default function AboutUsPage() {
           </p>
 
           <div className="heroButtons">
-            <Link to="/src/app/pages/DocumentationPage">
-              <Button
-                variant="destructive"
-                className="heroButton"
-              >
-                Documentation
-              </Button>
-            </Link>
+            <Button
+              variant="destructive"
+              className="heroButton"
+              onClick={() => navigate("/documentation")}
+            >
+              Documentation
+            </Button>
 
-            <Link to="/src/app/pages/Home">
-              <Button className="heroButton bg-primary hover:bg-primary/90">
-                Try it Now
-              </Button>
-            </Link>
+            <Button 
+              className="heroButton bg-primary hover:bg-primary/90"
+              onClick={() => navigate(isAuthenticated ? "/home" : "/login")}
+            >
+              Try it Now
+            </Button>
           </div>
         </section>
 
