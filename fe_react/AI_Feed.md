@@ -1,77 +1,77 @@
 **Act as:** Senior Frontend Developer
-**Task:** Implement the "Advanced Source Operations" API service and Types.
-**Tech Stack:** TypeScript, React, [Axios or Fetch]
+**Task:** Implement Admin Navigation, Rules Management, and Violations History.
+**Tech Stack:** TypeScript, React, Tailwind CSS, **Shadcn UI** (Strict requirement).
 
 **Context:**
-You are extending the "Sources" module. We have already covered listing and creating. Now, we need to implement the detailed control features: updating, deleting, retrieving detection zones, controlling the processing engine (start/stop), and viewing the live stream.
+You are refining the Admin Dashboard. We have three main objectives:
+1.  **Refactor Navigation:** The admin menu is becoming crowded. You need to group items logically using Shadcn UI components.
+2.  **Rules Management:** A CRUD interface for the "DSL Rules" that trigger violations (based on the provided API image).
+3.  **Violations Log:** A view to see the actual detected violations (based on the provided Pydantic models).
 
-**API Specifications (Advanced Operations):**
+---
 
-1.  **Update Source**
-    * **Endpoint:** `PUT /api/v1/sources/{source_id}`
-    * **Role:** Admin only.
-    * **Purpose:** Update fields like `file_path`, `is_active`, or `source_type`.
-    * **Response:** Updated `Source` object.
+### **Task 1: Admin Navigation Refactor**
+**Requirement:** The navigation bar is too long. Use the **Shadcn UI `DropdownMenu`** component to group management links.
 
-2.  **Delete Source**
-    * **Endpoint:** `DELETE /api/v1/sources/{source_id}`
-    * **Role:** Admin only.
-    * **Response:** `204 No Content`.
-    * **UI Behavior:** On success, redirect the user back to the list view or remove the item from the local state.
+---
 
-3.  **Get Zones (ROI)**
-    * **Endpoint:** `GET /api/v1/sources/{source_id}/zones`
-    * **Role:** Admin.
-    * **Purpose:** Retrieve the Region of Interest (ROI) coordinates for drawing overlays on the video.
-    * **Data Shape:** Array of objects containing `coordinates: { points: [[x,y], ...] }`.
+### **Task 2: Rules Management Page (CRUD)**
+**Location:** `src/pages/admin/rules/`
+**API Endpoint:** `/api/v1/rules` (See attached API table)
+**Features:**
+1.  **List Rules:** Fetch and display all rules (Columns: Name, Active Status, Created At).
+2.  **Create Rule:** A form to create a new rule.
+    * **Inputs:** `name` (Text), `dsl_content` (Text Area / Code Editor), `is_active` (Switch/Checkbox).
+    * *Note:* The "dsl_content" is the logic string (e.g., "IF ... THEN ...").
+3.  **Delete Rule:** Soft delete or hard delete based on the API `DELETE` endpoint.
 
-4.  **Processing Controls**
-    * **Start:** `POST /api/v1/sources/{source_id}/processing/start`
-    * **Stop:** `POST /api/v1/sources/{source_id}/processing/stop`
-    * **Role:** Admin OR Police.
-    * **Payload:** None (empty body).
-    * **Response:** `{ source_id: string, status: "running" | "stopped", message: string }`.
-
-5.  **Live Stream**
-    * **Endpoint:** `GET /api/v1/sources/{source_id}/stream`
-    * **Format:** MJPEG stream (multipart).
-    * **Usage:** This URL will likely be used directly in an `<img src="..." />` tag in the React component rather than an Axios fetch, but we need a helper function to construct the full URL (potentially appending an auth token if required).
-
-**Data Structures (TypeScript Interfaces):**
-
+**Types (from API Image):**
 ```typescript
-// For the Zone/ROI data
-interface Zone {
+interface Rule {
   id: string;
-  source_id: string;
-  coordinates: {
-    points: [number, number][]; // Array of [x, y] tuples
-  };
+  name: string;
+  dsl_content: string;
+  is_active: boolean;
+  created_by_id: string;
   created_at: string;
   updated_at: string;
 }
 
-// For Processing Control responses
-interface ProcessingStatusResponse {
-  source_id: string;
-  status: 'running' | 'stopped';
-  message: string;
+interface CreateRulePayload {
+  name: string;
+  dsl_content: string;
 }
 ```
-Deliverables:
 
-Extend types/source.ts: Add the Zone and ProcessingStatusResponse interfaces.
+Task 3: Violations History Page
 
-Update services/sourceService.ts: Add functions for:
+Location: src/pages/admin/violations/ Purpose: Display the log of detected violations. Data Structure: Use the TypeScript equivalent of the provided Python Pydantic models.
 
-updateSource(id, data)
+TypeScript Interfaces (Converted from your Python code):
+```python
+interface Violation {
+  id: string;
+  source_id: string;
+  rule_id: string;
+  timestamp: string;
+  detected_license_plate: string | null;
+  evidence_url: string; // URL to image/video
+  metadata: Record<string, any>;
+}
 
-deleteSource(id)
+interface ViolationListResponse {
+  violations: Violation[];
+  total: number;
+  skip: number;
+  limit: number;
+}
+```
+UI Requirements:
 
-fetchSourceZones(id)
+Display a table of violations.
 
-startProcessing(id)
+Include a thumbnail or link for evidence_url.
 
-stopProcessing(id)
+Show detected_license_plate clearly (highlight if present).
 
-getStreamUrl(id): A helper that returns the full absolute URL string for the video stream.
+Assumption: Assume a standard GET /api/v1/violations endpoint exists that returns ViolationListResponse.

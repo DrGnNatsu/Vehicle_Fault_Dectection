@@ -1,18 +1,25 @@
-import { Moon, Sun, UserCircle } from "lucide-react";
+import { Moon, Sun, UserCircle, ChevronDown, Users, FileText, Activity } from "lucide-react";
 import { useEffect } from "react";
 import { NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/authStore";
 import { useThemeStore } from "@/store/themeStore";
 import { cn } from "@/utils/utils";
 import './css/AfterNavigation.css';
 
-const allNavLinks = [
+const publicNavLinks = [
   { to: "/home", text: "Home", roles: ['admin', 'police'] },
-  { to: "/blog", text: "Blog", roles: ['admin', 'police'] },
-  { to: "/documentation", text: "Documentation", roles: ['admin', 'police'] },
-  { to: "/about", text: "About Us", roles: ['admin', 'police'] },
   { to: "/search", text: "Search Violations", roles: ['admin', 'police', 'user'] },
+  { to: "/documentation", text: "Docs", roles: ['admin', 'police'] },
+  { to: "/about", text: "About", roles: ['admin', 'police'] },
 ];
 
 export default function AfterNavigation() {
@@ -23,6 +30,8 @@ export default function AfterNavigation() {
   useEffect(() => {
     initTheme();
   }, [initTheme]);
+
+  const isAdmin = role?.toLowerCase() === 'admin';
 
   return (
     <nav className="afterNavContainer">
@@ -39,17 +48,38 @@ export default function AfterNavigation() {
 
         {/* Center: Links */}
         <div className="afterNavLinks">
-          {allNavLinks
+          {publicNavLinks
             .filter(link => !link.roles || link.roles.includes(role?.toLowerCase() || ''))
             .map((link) => (
               <NavItem key={link.to} to={link.to} text={link.text} />
           ))}
-          {role?.toLowerCase() === 'admin' && (
-            <NavItem to="/manage-users" text="Manage Users" />
+
+          {isAdmin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
+                Admin <ChevronDown className="w-4 h-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Management</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/manage-users")}>
+                  <Users className="mr-2 h-4 w-4" />
+                  <span>Manage Users</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/rules")}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>Rules Management</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/violations")}>
+                  <Activity className="mr-2 h-4 w-4" />
+                  <span>Violations Log</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
 
-        {/* Right: Theme Toggle */}
+        {/* Right: Actions */}
         <div className="afterNavActions">
           <div className="afterNavThemeToggle">
             {isDarkMode ? (
@@ -62,20 +92,25 @@ export default function AfterNavigation() {
               onCheckedChange={(checked) => toggleDarkMode(checked)}
               aria-label="Toggle dark mode"
             />
-            <span className="afterNavThemeLabel">
-              {isDarkMode ? "Dark" : "Light"}
-            </span>
           </div>
-          <RouterNavLink 
-            to="/account-settings" 
-            className={({ isActive }) => cn(
-              "p-1.5 rounded-full transition-colors hover:bg-muted",
-              isActive ? "text-primary" : "text-muted-foreground"
-            )}
-            title="Account Settings"
-          >
-            <UserCircle className="w-6 h-6" />
-          </RouterNavLink>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              <div className="p-1.5 rounded-full transition-colors hover:bg-muted text-muted-foreground hover:text-primary">
+                <UserCircle className="w-6 h-6" />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel>Account Settings</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/account-settings")}>
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/logout")} className="text-destructive focus:text-destructive">
+                Log Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </nav>

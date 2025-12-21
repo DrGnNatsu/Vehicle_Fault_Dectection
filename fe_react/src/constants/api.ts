@@ -13,4 +13,12 @@ export const API_ENDPOINTS = {
     BASE: '/api/v1/sources',
     DETAILS: (id: string) => `/api/v1/sources/${id}`,
   },
+  RULES: {
+    BASE: '/api/v1/rules',
+    DETAILS: (id: string) => `/api/v1/rules/${id}`,
+  },
+  VIOLATIONS: {
+    BASE: '/api/v1/violations',
+    DETAILS: (id: string) => `/api/v1/violations/${id}`,
+  },
 };
