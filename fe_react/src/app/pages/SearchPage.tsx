@@ -14,7 +14,7 @@ type Violation = {
     location: string;
 };
 
-export default function Search() {
+export default function SearchPage() {
     const [plate, setPlate] = useState("");
     const [result, setResult] = useState<Violation | null>(null);
     const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ export default function Search() {
                     </p>
                 </header>
 
-                {/* Search Bar */}
+                {/* SearchPage Bar */}
                 <div className="searchBarWrapper">
                     <div className="searchInputInner">
                         <SearchIcon className="searchIcon" />

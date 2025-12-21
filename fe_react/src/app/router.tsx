@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
-import Home from "./pages/Home.tsx";
-import AboutUs from "./pages/AboutUs.tsx";
-import AccountSetting from "./pages/MyAccount.tsx";
-import Blog from "./pages/Blog.tsx";
+import HomePage from "./pages/HomePage.tsx";
+import AboutUsPage from "./pages/AboutUsPage.tsx";
+import AccountSetting from "./pages/MyAccountPage.tsx";
+import BlogPage from "./pages/BlogPage.tsx";
 import Camera from "./pages/Camera.tsx";
-import Documentation from "./pages/documentation.tsx";
+import DocumentationPage from "./pages/DocumentationPage.tsx";
 import LandingPage from "./pages/landingPage.tsx";
 
 import { Login, Registration, Reset1, Reset2, Reset3 } from "./auth/auth.tsx";
@@ -16,13 +16,13 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <LandingPage /> },
-      { path: "home", element: <Home /> },
+      { path: "home", element: <HomePage /> },
       { path: "landing", element: <LandingPage /> },
-      { path: "about", element: <AboutUs /> },
+      { path: "about", element: <AboutUsPage /> },
       { path: "account-settings", element: <AccountSetting /> },
-      { path: "blog", element: <Blog /> },
+      { path: "blog", element: <BlogPage /> },
       { path: "camera", element: <Camera /> },
-      { path: "documentation", element: <Documentation /> },
+      { path: "documentation", element: <DocumentationPage /> },
 
       // ✅ FIX: Auth Routes
       // 1. Removed 'element: <Auth />' because the 'AuthLayout' is now inside the pages.
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
       { path: "reset3", element: <Reset3 /> },
 
       // fallback
-      { path: "*", element: <Home /> },
+      { path: "*", element: <HomePage /> },
     ],
   },
 ]);

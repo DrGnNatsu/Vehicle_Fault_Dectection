@@ -29,7 +29,7 @@ const featureData = [
   },
 ];
 
-export default function AboutUs() {
+export default function AboutUsPage() {
   return (
     <div className="aboutUsContainer">
       <AfterNavigation />
@@ -46,7 +46,7 @@ export default function AboutUs() {
           </p>
 
           <div className="heroButtons">
-            <Link to="/documentation">
+            <Link to="/src/app/pages/DocumentationPage">
               <Button
                 variant="destructive"
                 className="heroButton"

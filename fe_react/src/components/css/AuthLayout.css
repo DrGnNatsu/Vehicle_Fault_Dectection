@@ -1,0 +1,157 @@
+@import "@/index.css";
+
+.authPageContainer {
+    @apply min-h-screen relative overflow-hidden bg-background;
+}
+
+.authBackground {
+    @apply fixed inset-0 flex;
+}
+
+.authBackgroundLeft {
+    @apply w-1/2 bg-muted/30 dark:bg-muted/10;
+}
+
+.authBackgroundRight {
+    @apply w-1/2 bg-background;
+}
+
+.authMainContent {
+    @apply relative z-10 min-h-screen flex flex-col md:flex-row;
+}
+
+.authLeftPanel {
+    @apply w-full md:w-1/2 flex items-center justify-center p-8 md:p-12;
+}
+
+.authBrandingWrapper {
+    @apply max-w-md flex flex-col gap-8;
+}
+
+.authLogoSection {
+    @apply flex items-center gap-2;
+}
+
+.authLogoIcon {
+    @apply w-6 h-6 text-primary;
+}
+
+.authLogoText {
+    @apply text-primary font-bold text-lg;
+}
+
+.authHeadingSection {
+    @apply flex flex-col gap-4;
+}
+
+.authTitle {
+    @apply text-foreground text-4xl md:text-5xl font-extralight tracking-tight leading-tight;
+}
+
+.authSubtitle {
+    @apply text-muted-foreground text-lg;
+}
+
+.authFeaturesList {
+    @apply flex flex-col gap-4;
+}
+
+.authFeatureItem {
+    @apply flex items-center gap-3;
+}
+
+.authFeatureIcon {
+    @apply w-5 h-5 text-primary;
+}
+
+.authFeatureText {
+    @apply text-foreground/80 font-medium;
+}
+
+.authSeparator {
+    @apply h-px bg-border;
+}
+
+.authQuote {
+    @apply text-muted-foreground italic text-sm;
+}
+
+.authRightPanel {
+    @apply w-full md:w-1/2 flex items-center justify-center p-8 md:p-12 bg-background md:bg-transparent;
+}
+
+.authFormWrapper {
+    @apply w-full max-w-md flex flex-col gap-8;
+}
+
+.authFormHeader {
+    @apply flex flex-col gap-2;
+}
+
+.authFormTitle {
+    @apply text-primary text-2xl font-bold;
+}
+
+.authFormSubtitle {
+    @apply text-muted-foreground text-sm;
+}
+
+.authForm {
+    @apply flex flex-col gap-6;
+}
+
+.authInputGroup {
+    @apply flex flex-col gap-2;
+}
+
+.authLabel {
+    @apply text-sm font-semibold text-foreground/80;
+}
+
+.authInput {
+    @apply h-11 bg-background border-border rounded-xl focus:ring-2 focus:ring-primary/20 transition-all;
+}
+
+.authInputHint {
+    @apply text-xs text-muted-foreground mt-1;
+}
+
+.authSubmitButton {
+    @apply h-11 rounded-xl font-bold text-base shadow-sm hover:shadow transition-all;
+}
+
+.authGoogleButton {
+    @apply h-11 rounded-xl font-semibold border-border hover:bg-accent transition-colors;
+}
+
+.authFooterLinks {
+    @apply flex flex-col gap-3 text-sm;
+}
+
+.authFooterText {
+    @apply text-muted-foreground;
+}
+
+.authLink {
+    @apply text-primary font-semibold hover:underline;
+}
+
+.authNavWrapper {
+    @apply fixed top-0 inset-x-0 z-20;
+}
+
+.authFooterWrapper {
+    @apply fixed bottom-0 inset-x-0 z-20 hidden md:block;
+}
+
+@media (max-width: 768px) {
+    .authBackground {
+        @apply hidden;
+    }
+    .authLeftPanel {
+        @apply pt-24 pb-8;
+    }
+    .authRightPanel {
+        @apply py-8;
+    }
+}

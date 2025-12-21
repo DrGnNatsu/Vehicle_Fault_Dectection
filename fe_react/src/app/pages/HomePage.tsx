@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import '@/app/css/Home.css';
 
-export default function Home() {
+export default function HomePage() {
   const role: "admin" | "user" = "admin"; // later from auth/session
 
   const handleDeleteCamera = (cameraId: string) => {

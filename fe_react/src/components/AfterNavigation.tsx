@@ -8,8 +8,8 @@ import './css/AfterNavigation.css';
 
 const navLinks = [
   { to: "/home", text: "Your Camera" },
-  { to: "/blog", text: "Blog" },
-  { to: "/documentation", text: "Documentation" },
+  { to: "/blog", text: "BlogPage" },
+  { to: "/documentation", text: "DocumentationPage" },
   { to: "/about", text: "About Us" },
   { to: "/search", text: "Search" },
 ];

@@ -5,7 +5,7 @@ import '../css/Blog.css';
 
 import {blogData} from "@/constants/blogData.ts"
 
-export default function Blog() {
+export default function BlogPage() {
     return (
         <div className="blogContainer">
             <AfterNavigation />
