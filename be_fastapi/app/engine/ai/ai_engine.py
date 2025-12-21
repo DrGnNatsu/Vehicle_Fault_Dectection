@@ -9,10 +9,10 @@ from ultralytics import YOLO # type: ignore
 from shapely.geometry import Point, Polygon
 from collections import defaultdict
 from sqlalchemy.orm import Session
-from app.database.session import SessionLocal
-from app.models.zone import Zone
-from app.engine.dsl.rule_engine import evaluate_frame
-from app.websockets.stream_manager import stream_manager
+from database.session import SessionLocal
+from models.zone import Zone
+from engine.dsl.rule_engine import evaluate_frame
+from sockets.stream_manager import stream_manager
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class VideoProcessor:
     def __init__(
         self,
-        model_path: str = 'app/engine/ckpt/best.pt',
+        model_path: str = 'engine/ckpt/best.pt',
         source_id=None,
         stop_event: Optional[threading.Event] = None
     ):
@@ -45,10 +45,6 @@ class VideoProcessor:
             self.load_zones_from_db(self.source_id)
         else:
             logger.warning("No source_id provided, cannot load zones.")
-        
-        # Memory cho tracking
-        self.track_history = defaultdict(lambda: [])
-        self.zone_entry_times = defaultdict(lambda: {})
 
     def load_zones_from_db(self, source_id):
         db: Session = SessionLocal()
@@ -60,6 +56,11 @@ class VideoProcessor:
                     points = z.coordinates
                     if isinstance(points, str):
                         points = json.loads(points)
+                    
+                    # Handle dict format from seed data {"points": [...]}
+                    if isinstance(points, dict) and "points" in points:
+                        points = points["points"]
+
                     if points and isinstance(points, list) and len(points) >= 3: # type: ignore
                         poly = Polygon(points)
                         self.zones[z.name] = poly
@@ -78,7 +79,6 @@ class VideoProcessor:
             db.close()
 
     def get_zone_for_point(self, x, y):
-        """Trả về tên zone chứa điểm (x, y), hoặc None"""
         point = Point(x, y)
         for z_name, z_poly in self.zones.items():
             if z_poly.contains(point):
@@ -118,10 +118,17 @@ class VideoProcessor:
             cv2.putText(frame, label, (int(x1), max(int(y1) - 10, 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2, cv2.LINE_AA)
 
     def process_video(self, video_source):
-        """
-        video_source: str (file path) hoặc int (0 cho webcam) hoặc RTSP URL
-        """
         import cv2
+        import os
+
+        # Try to resolve video path if file not found
+        if not os.path.exists(video_source):
+             # Try going up one level (common in this project structure: app/ vs videos/)
+             alt_path = os.path.join("..", video_source)
+             if os.path.exists(alt_path):
+                 logger.info(f"Resolved video path from '{video_source}' to '{alt_path}'")
+                 video_source = alt_path
+
         cap = cv2.VideoCapture(video_source)
         if not cap.isOpened():
             logger.error(f"Cannot open video source: {video_source}")
@@ -168,7 +175,6 @@ class VideoProcessor:
                 boxes = results[0].boxes
                 current_timestamp = datetime.utcnow().isoformat() + "Z"
 
-                # Gửi TẤT CẢ detections vào DSL (không cần IOU matching)
                 dsl_objects = []
                 for box in boxes:
                     cls_id = int(box.cls[0])
@@ -177,8 +183,7 @@ class VideoProcessor:
                     center_y = (y1 + y2) / 2
                     conf = float(box.conf[0])
                     track_id = int(box.id[0]) if box.id is not None else None
-                    
-                    # Check zone cho mọi detection
+
                     zone_name = self.get_zone_for_point(center_x, center_y)
                     
                     obj_data = {
@@ -198,7 +203,6 @@ class VideoProcessor:
                     "objects": dsl_objects
                 }
 
-                # Gọi DSL rule engine
                 db = SessionLocal()
                 violating_bboxes = set()
                 try:
@@ -217,7 +221,7 @@ class VideoProcessor:
                             except Exception:
                                 continue
                         total_violations += len(violations)
-                        logger.warning(f"🚨 Frame {frame_count}: {len(violations)} violation(s) detected!")
+                        logger.warning(f"Frame {frame_count}: {len(violations)} violation(s) detected!")
                 except Exception as e:
                     logger.error(f"Error in rule evaluation: {e}")
                 finally:

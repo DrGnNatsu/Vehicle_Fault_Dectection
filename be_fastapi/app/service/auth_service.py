@@ -3,13 +3,13 @@ from datetime import timedelta
 
 from sqlalchemy.orm import Session
 
-from app.core.config import settings
-from app.exception.auth_exception import InvalidCredentialsException, \
+from core.config import settings
+from exception.auth_exception import InvalidCredentialsException, \
     PasswordTooWeakException, PasswordDoNotMatchException
-from app.repository.user_repo import UserRepository
-from app.schemas.login import LoginResponseDTO, LoginRequestDTO
-from app.schemas.register import RegisterRequestDTO, RegisterResponseDTO, RegisterCreateUserDTO
-from app.utils.auth import verify_password, create_access_token, is_password_valid, get_password_hash
+from repository.user_repo import UserRepository
+from schemas.login import LoginResponseDTO, LoginRequestDTO
+from schemas.register import RegisterRequestDTO, RegisterResponseDTO, RegisterCreateUserDTO
+from utils.auth import verify_password, create_access_token, is_password_valid, get_password_hash
 
 logger = logging.getLogger(__name__)
 

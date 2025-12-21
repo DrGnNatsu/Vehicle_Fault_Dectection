@@ -2,7 +2,7 @@ import logging
 import threading
 from typing import Dict
 
-from app.engine.ai.ai_engine import VideoProcessor
+from engine.ai.ai_engine import VideoProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class VideoProcessingManager:
         if job and not job.thread.is_alive():
             self.jobs.pop(source_id, None)
 
-    def start(self, source_id: str, video_source: str, model_path: str = "app/engine/ckpt/best.pt") -> bool:
+    def start(self, source_id: str, video_source: str, model_path: str = "engine/ckpt/best.pt") -> bool:
         with self.lock:
             self._cleanup_if_finished(source_id)
             existing = self.jobs.get(source_id)

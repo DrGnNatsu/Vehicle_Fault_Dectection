@@ -1,10 +1,10 @@
 from pydantic import EmailStr
 from sqlalchemy.orm import Session
 
-from app.enum.role import Role
-from app.exception.user_exception import UserCreateFailException
-from app.models.user import User
-from app.schemas.register import RegisterCreateUserDTO
+from enums.role import Role
+from exception.user_exception import UserCreateFailException
+from models.user import User
+from schemas.register import RegisterCreateUserDTO
 
 
 class UserRepository:

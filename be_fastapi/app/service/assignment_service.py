@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List, Optional
-from app.models.police_source_assignment import PoliceSourceAssignment
-from app.models.user import User
-from app.models.sources import Source
-from app.schemas.assignment import AssignmentResponse, SourceAssignmentInfo
+from models.police_source_assignment import PoliceSourceAssignment
+from models.user import User
+from models.sources import Source
+from schemas.assignment import AssignmentResponse, SourceAssignmentInfo
 
 
 class AssignmentService:

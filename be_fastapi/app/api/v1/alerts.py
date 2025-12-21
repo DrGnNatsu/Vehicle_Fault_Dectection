@@ -5,11 +5,11 @@ from jwt.exceptions import InvalidTokenError
 from uuid import UUID
 import logging
 
-from app.database.session import get_db
-from app.models.user import User
-from app.core.config import settings
-from app.websockets.manager import manager
-from app.service.assignment_service import AssignmentService
+from database.session import get_db
+from models.user import User
+from core.config import settings
+from sockets.manager import manager
+from service.assignment_service import AssignmentService
 
 logger = logging.getLogger(__name__)
 

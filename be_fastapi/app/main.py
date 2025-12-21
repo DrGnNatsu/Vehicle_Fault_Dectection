@@ -1,11 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.api.v1 import api_router
-from app.core.config import settings
-from app.core.cors import setup_cors
-from app.exception.base_exception import AppException
-from app.exception.handlers import app_exception_handler
+from api.v1 import api_router
+from core.config import settings
+from core.cors import setup_cors
+from exception.base_exception import AppException
+from exception.handlers import app_exception_handler
 
 app = FastAPI(
     title="Vehicle Fault Detection API",
@@ -29,4 +29,4 @@ def root():
 
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", reload=True)
+    uvicorn.run("main:app", reload=True)

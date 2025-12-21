@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from app.database.session import get_db
-from app.models.rule import Rule
-from app.models.user import User
-from app.api.v1.dependencies import require_admin
-from app.schemas.rule import RuleResponse, RuleCreateRequest, RuleUpdateRequest
+from database.session import get_db
+from models.rule import Rule
+from models.user import User
+from api.v1.dependencies import require_admin
+from schemas.rule import RuleResponse, RuleCreateRequest, RuleUpdateRequest
 
 router = APIRouter(prefix="/rules", tags=["rules"])
 

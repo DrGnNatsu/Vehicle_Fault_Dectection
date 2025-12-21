@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Boolean, TIMESTAMP, text
 from sqlalchemy.dialects.postgresql import UUID, ENUM as PGEnum
 
-from app.enum.role import Role
+from enums.role import Role
 from .base import Base
 
 

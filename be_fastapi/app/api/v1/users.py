@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from app.database.session import get_db
-from app.models.user import User
-from app.api.v1.dependencies import require_admin
-from app.utils.auth import get_password_hash, is_password_valid
-from app.schemas.user import UserResponse, UserCreateRequest, UserUpdateRequest
+from database.session import get_db
+from models.user import User
+from api.v1.dependencies import require_admin
+from utils.auth import get_password_hash, is_password_valid
+from schemas.user import UserResponse, UserCreateRequest, UserUpdateRequest
 
 router = APIRouter(prefix="/users", tags=["users"])
 
