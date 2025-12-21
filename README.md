@@ -1,156 +1,180 @@
-# Vehicle_Fault_Dectection
+# Vehicle_Fault_Detection
+
 A web-based platform that receives live camera streams and allows users to define custom fault detection rules using our own domain-specific language (DSL).
 
-# Running `be_fastapi`
-1. Make sure your system already install `uv`
-2. Cd `be_fasapi`
-3. Install dependency
-    ```python
-    uv sync
-    ```
-4. Activate venv
+## Prerequisites
 
-    - For linux:
-        ```
-        source .venv/bin/activate
-        ```
-     
-    - For Windows:
-        ```
-        .\.venv\Scripts\Activate.ps1
-        ```
-5. Install additional packages:
-```python
-    uv add python-dotenv fastapi uvicorn pydantic-settings sqlalchemy
+Ensure you have the following installed on your system:
+- **Node.js**: v18+ (for frontend)
+- **Python**: v3.11+
+- **uv**: Fast Python package installer and resolver
+- **Docker & Docker Compose**: For containerized deployment
 
+---
+
+## 1. Frontend (`fe_react`)
+
+The frontend is a React application powered by Vite.
+
+### Installation
+
+Navigate to the frontend directory:
+```bash
+cd fe_react
 ```
 
-# Running with doocker
-## Start both app and db
-
-```python
-    docker-compose up -d
+Install dependencies:
+```bash
+npm install
+# or if you use yarn
+yarn
 ```
 
-## Start only the app
-```python
+### Running Locally
+
+Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The application will typically run at `http://localhost:5173`.
+
+---
+
+## 2. Backend (`be_fastapi`)
+
+The backend is built with FastAPI.
+
+### Installation
+
+Navigate to the backend directory:
+```bash
+cd be_fastapi
+```
+
+Install dependencies using `uv`:
+```bash
+uv sync
+```
+
+### Running Locally
+
+1. **Activate the virtual environment**:
+
+   - **Linux/macOS**:
+     ```bash
+     source .venv/bin/activate
+     ```
+   - **Windows**:
+     ```powershell
+     .\.venv\Scripts\Activate.ps1
+     ```
+
+2. **Install additional packages (if not already synced)**:
+   ```bash
+   uv add python-dotenv fastapi uvicorn pydantic-settings sqlalchemy
+   ```
+
+3. **Start the server**:
+   ```bash
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+   ```
+
+   The API docs will be available at `http://localhost:8000/docs`.
+
+---
+
+## 3. Running with Docker
+
+You can run the entire system (Backend + Database) using Docker Compose.
+
+**IMPORTANT**: All Docker commands must be run from the `be_fastapi` directory.
+
+```bash
+cd be_fastapi
+```
+
+### Start App and Database
+```bash
+docker-compose up -d
+```
+
+### Start Only App
+```bash
 docker-compose up -d app
 ```
 
-## Start only the db
-```python
+### Start Only Database
+```bash
 docker-compose up -d db
-```
---- 
-# Database Migration (Alembic)
-
-## Create migration file
-
-```python
-docker-compose exec app alembic revision --autogenerate -m "init db schema"
-```
-
-
-## Copy migration file from container
-```python
-docker-compose cp app:/app/alembic/versions/. ./alembic/versions/
-```
-
-
-## Apply migration
-```python
-docker-compose exec app alembic upgrade head
 ```
 
 ---
 
-# Troubleshooting
+## Database Migration (Alembic)
 
-## Rebuild containers
+Migrations should be managed inside the Docker container to ensure consistency.
 
-```python
+### Create Migration File
+```bash
+docker-compose exec app alembic revision --autogenerate -m "description of change"
+```
+
+### Apply Migrations
+```bash
+docker-compose exec app alembic upgrade head
+```
+
+### Check Database Tables
+```bash
+docker-compose exec db psql -U postgres -d vehicle_fault_db -c "\dt"
+```
+
+---
+
+## Troubleshooting
+
+### Rebuild Containers
+If you added new dependencies or changed the Dockerfile:
+```bash
 docker-compose down
 docker-compose up -d --build
 ```
 
-
-## Remove volumes (if needed)
-
-```python
+### Remove Volumes (Reset DB)
+**Warning**: This deletes all data.
+```bash
 docker-compose down -v
 ```
 
-
-## Fix migration file issues
-
-### 1. Migration file is corrupted (remove migration file then compose the migration file again)
-
-```python
-rm ./alembic/versions/<migration_file>.py
-```
-
-### 2. Migration file is empty
-Open the file and paste the manually generated migration script.
+### Fix Corrupted Migrations
+1. Remove the corrupted file:
+   ```bash
+   rm ./alembic/versions/<migration_file>.py
+   ```
+2. Regenerate the migration.
 
 ---
 
-# Check Database Tables
-```python
-docker-compose exec db psql -U postgres -d vehicle_fault_db -c "\dt"
-```
-
-
-Expected tables:
-- alembic_version  (table alembic generate)
-- users  
-- cameras  
-- zones  
-- rules  
-- violations  
-- police_camera_assignments  
-
----
-
-# Commit Convention
+## Commit Convention
 
 We follow **Conventional Commits**:
-```python
+```text
 feat: new feature
 fix: bug fix
 docs: documentation updates
 refactor: code structure changes
 build: docker or build system
 ```
-For example:
 
-```python
-git commit -m "feat(database): add full database models and initial migration" -m "Adds SQLAlchemy models, Alembic configuration, and the initial database migration with PostgreSQL 18 support. It includes tables for users, cameras, zones, rules, violations, and police assignments."
+Example:
+```bash
+git commit -m "feat(database): add user table"
 ```
-
-Branch naming:
-
-```python
-feature/<name>
-bugfix/<name>
-docs/<name>
-hotfix/<name>
-```
-
 
 ---
 
-# Notes
-- `.env` must not be committed.
-- Migrations should always be run inside Docker.
-- PostgreSQL 18 requires `pgcrypto` for UUID generation.
-
----
-
-# License
+## License
 This project is for academic and internal team development.
-
----
-
-# Contact
-For issues, please open a GitHub issue or contact the development team.
-
