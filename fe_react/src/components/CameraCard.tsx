@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus, Camera } from "lucide-react";
+import { Trash2, Plus, Camera, Pencil, Video } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { CameraCardProps } from "@/types/camera";
 import './css/CameraCard.css';
@@ -32,44 +32,71 @@ export function CameraCard(props: CameraCardProps) {
   // ✅ Standard Camera Card
   const {
     id,
-    title = "Camera Title",
-    description = "Description",
+    name = "Camera Name",
+    source_type = "camera",
+    camera_url,
+    file_path,
     role = "user",
     onDelete,
+    onEdit,
   } = props;
+
+  const isAdmin = role?.toLowerCase() === "admin";
+  const isPoliceOrAdmin = isAdmin || role?.toLowerCase() === "police";
+
+  // Logic: Show Video icon if camera_url is null and file_path exists
+  const isVideoFile = !camera_url && !!file_path;
 
   return (
     <div className="cameraCardContainer">
       <div className="cameraCardHeader">
-        <h3 className="cameraCardTitle">
-          {title}
-        </h3>
-        <p className="cameraCardDescription">{description}</p>
+        <h3 className="cameraCardTitle">{name}</h3>
+        <div className="cameraCardBadge">
+          {source_type === 'camera' ? 'Live' : 'Video'}
+        </div>
       </div>
 
       <div className="cameraCardContent">
         <div className="cameraCardPreview">
-            <Camera className="w-12 h-12 text-muted-foreground/40" />
+          {isVideoFile ? (
+            <Video className="w-10 h-10 text-muted-foreground/30" />
+          ) : (
+            <Camera className="w-10 h-10 text-muted-foreground/30" />
+          )}
         </div>
       </div>
 
       <div className="cameraCardFooter">
-        <Button
-          onClick={() => navigate(`/camera/${id}`)}
-          className="cameraCardButton"
-        >
-          Check Camera
-        </Button>
-
-        {role === "admin" && (
-          <Button 
-            variant="destructive" 
-            onClick={onDelete} 
-            className="deleteButton"
+        {isPoliceOrAdmin && (
+          <Button
+            onClick={() => navigate(`/camera/${id}`)}
+            className="cameraCardButton"
           >
-            <Trash2 className="w-4 h-4 mr-1" />
-            Delete
+            Check Camera
           </Button>
+        )}
+
+        {isAdmin && (
+          <div className="adminActions">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onEdit}
+              className="actionButton"
+              title="Edit Camera"
+            >
+              <Pencil className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onDelete}
+              className="actionButton hover:text-destructive hover:border-destructive/50"
+              title="Delete Camera"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
         )}
       </div>
     </div>

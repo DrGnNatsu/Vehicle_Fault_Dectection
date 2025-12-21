@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "user"
+export type UserRole = "admin" | "police" | "user"
 
 type AddCardProps = {
   isAddCard: true
@@ -8,10 +8,13 @@ type AddCardProps = {
 type NormalCameraCardProps = {
   isAddCard?: false
   id: string
-  title?: string
-  description?: string
-  role?: UserRole
+  name: string
+  source_type: 'video' | 'camera'
+  camera_url: string | null
+  file_path: string | null
+  role?: string | null
   onDelete?: () => void
+  onEdit?: () => void
 }
 
 export type CameraCardProps = AddCardProps | NormalCameraCardProps

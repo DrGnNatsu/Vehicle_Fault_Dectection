@@ -1,6 +1,8 @@
 import { Rocket, Shield, Cpu } from "lucide-react";
 import AfterNavigation from "@/components/AfterNavigation";
+import BeforeNavigation from "@/components/BeforeNavigation";
 import Footer from "@/components/Footer";
+import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import AboutCard from "@/components/AboutCard.tsx";
 import { Link } from "react-router-dom";
@@ -29,10 +31,12 @@ const featureData = [
   },
 ];
 
-export default function AboutUs() {
+export default function AboutUsPage() {
+  const { isAuthenticated } = useAuthStore();
+  
   return (
     <div className="aboutUsContainer">
-      <AfterNavigation />
+      {isAuthenticated ? <AfterNavigation /> : <BeforeNavigation />}
 
       <main className="aboutUsMain">
         {/* --- Hero Section --- */}
@@ -46,7 +50,7 @@ export default function AboutUs() {
           </p>
 
           <div className="heroButtons">
-            <Link to="/documentation">
+            <Link to="/src/app/pages/DocumentationPage">
               <Button
                 variant="destructive"
                 className="heroButton"

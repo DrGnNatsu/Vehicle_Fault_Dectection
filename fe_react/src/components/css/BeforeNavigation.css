@@ -9,15 +9,19 @@
 }
 
 .navBrand {
-    @apply flex items-center gap-2 transition-opacity hover:opacity-90;
-}
-
-.navLogo {
-    @apply w-8 h-8 text-primary;
+    @apply flex items-center transition-opacity hover:opacity-90;
 }
 
 .navTitle {
     @apply text-foreground text-xl font-bold tracking-tight;
+}
+
+.navLinks {
+    @apply hidden md:flex items-center gap-8;
+}
+
+.navLink {
+    @apply text-sm font-medium text-muted-foreground hover:text-primary transition-colors;
 }
 
 .navActions {

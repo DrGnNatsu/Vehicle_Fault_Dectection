@@ -1,4 +1,4 @@
-const NumberPlate = () => {
+const NumberPlatePage = () => {
   return (
     <div className="p-20 h-full">
       <div>
@@ -9,4 +9,4 @@ const NumberPlate = () => {
   );
 };
 
-export default NumberPlate;
+export default NumberPlatePage;

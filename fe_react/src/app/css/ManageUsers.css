@@ -1,0 +1,64 @@
+@import "@/index.css";
+
+.manageUsersContainer {
+    @apply min-h-screen flex flex-col bg-background text-foreground;
+}
+
+.manageUsersMain {
+    @apply flex-1 flex flex-col;
+}
+
+.manageUsersHeader {
+    @apply w-full border-b border-border bg-card/50 backdrop-blur-sm sticky top-20 z-40;
+}
+
+.manageUsersHeaderContent {
+    @apply max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6;
+}
+
+.manageUsersHeaderInfo {
+    @apply space-y-1;
+}
+
+.manageUsersTitle {
+    @apply text-3xl md:text-4xl font-bold text-primary tracking-tight;
+}
+
+.manageUsersSubtitle {
+    @apply text-muted-foreground text-lg;
+}
+
+.addUserButton {
+    @apply h-11 px-6 rounded-lg font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98];
+}
+
+.usersTableSection {
+    @apply w-full max-w-7xl mx-auto px-6 py-12;
+}
+
+.usersTableCard {
+    @apply border-border/50 bg-background/50 backdrop-blur-sm overflow-hidden transition-all duration-300;
+}
+
+/* Modal Enhancements */
+.modalBackdrop {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4;
+}
+
+.modalContent {
+    @apply w-full max-w-lg shadow-2xl bg-card;
+}
+
+.optionalLabel {
+    @apply text-muted-foreground font-normal text-[0.7rem] uppercase tracking-wider;
+}
+
+@media (max-width: 640px) {
+    .manageUsersHeaderContent {
+        @apply py-6;
+    }
+    
+    .usersTableSection {
+        @apply py-8 px-4;
+    }
+}

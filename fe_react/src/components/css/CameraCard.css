@@ -1,7 +1,7 @@
 @import "@/index.css";
 
 .cameraCardContainer {
-    @apply w-full max-w-sm h-[400px] bg-card rounded-xl border border-border flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-primary/20;
+    @apply w-full h-[280px] bg-card rounded-2xl border border-border flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-primary/30 hover:-translate-y-1;
 }
 
 .addCardContainer {
@@ -9,35 +9,39 @@
 }
 
 .cameraCardHeader {
-    @apply px-5 py-5 space-y-1;
+    @apply px-5 py-4 flex items-center justify-between gap-4;
 }
 
 .cameraCardTitle {
-    @apply text-xl font-bold text-foreground;
+    @apply text-lg font-bold text-foreground truncate;
 }
 
-.cameraCardDescription {
-    @apply text-sm text-muted-foreground line-clamp-1;
+.cameraCardBadge {
+    @apply px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20;
 }
 
 .cameraCardContent {
-    @apply flex-1 flex justify-center items-center p-5;
+    @apply flex-1 p-5 pt-0;
 }
 
 .cameraCardPreview {
-    @apply w-full h-full bg-muted/50 rounded-lg flex items-center justify-center overflow-hidden border border-border/50;
+    @apply w-full h-full bg-muted/30 rounded-xl flex items-center justify-center overflow-hidden border border-border/50;
 }
 
 .cameraCardFooter {
-    @apply p-5 border-t border-border flex gap-3 bg-muted/10;
+    @apply p-4 border-t border-border/50 flex items-center justify-between gap-3 bg-muted/5;
 }
 
 .cameraCardButton {
-    @apply flex-1 font-semibold;
+    @apply flex-1 font-semibold h-9 text-xs;
 }
 
-.deleteButton {
-    @apply flex-1 font-semibold;
+.adminActions {
+    @apply flex items-center gap-2;
+}
+
+.actionButton {
+    @apply w-9 h-9 border-border/50 hover:bg-muted transition-colors;
 }
 
 @media (max-width: 640px) {

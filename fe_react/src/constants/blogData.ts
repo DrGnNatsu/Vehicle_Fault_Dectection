@@ -14,7 +14,7 @@ export const blogData = [
             {
                 title: "Improvements",
                 items: [
-                    "Enhanced AboutUs page with Vercel-inspired design",
+                    "Enhanced AboutUsPage page with Vercel-inspired design",
                     "Separated CSS into semantic files using Tailwind @apply",
                     "Improved mobile responsiveness across all core components"
                 ]
@@ -43,7 +43,7 @@ export const blogData = [
                 items: [
                     "Footer component with social links",
                     "AboutCard for highlighting key platform features",
-                    "Initial routing setup for Home and About pages"
+                    "Initial routing setup for HomePage and About pages"
                 ]
             }
         ],
