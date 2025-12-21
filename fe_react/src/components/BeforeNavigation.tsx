@@ -1,4 +1,4 @@
-import { Camera, User, Moon, Sun } from "lucide-react";
+import { User, Moon, Sun } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -9,9 +9,14 @@ import './css/BeforeNavigation.css';
 const navData = {
   brand: {
     name: "CameraLanguage",
-    icon: Camera,
     path: "/"
   },
+  links: [
+    { label: "Home", path: "/" },
+    { label: "About Us", path: "/about" },
+    { label: "Blog", path: "/blog" },
+    { label: "Documentation", path: "/documentation" },
+  ],
   login: {
     label: "Login",
     icon: User,
@@ -35,11 +40,18 @@ export default function BeforeNavigation() {
   return (
     <nav className="navContainer">
       <div className="navContent">
-        {/* Left Section: Logo */}
         <Link to={brand.path} className="navBrand">
-          <brand.icon className="navLogo" />
           <h1 className="navTitle">{brand.name}</h1>
         </Link>
+
+        {/* Center Section: Navigation Links */}
+        <div className="navLinks">
+          {navData.links.map((link) => (
+            <Link key={link.path} to={link.path} className="navLink">
+              {link.label}
+            </Link>
+          ))}
+        </div>
 
         <div className="navActions">
           {/* Dark Mode Toggle */}

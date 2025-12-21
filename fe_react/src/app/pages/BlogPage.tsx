@@ -1,14 +1,18 @@
 import AfterNavigation from "@/components/AfterNavigation";
+import BeforeNavigation from "@/components/BeforeNavigation";
 import Footer from "@/components/Footer";
+import { useAuthStore } from "@/store/authStore";
 import VersionCard from "@/components/VersionCard.tsx";
 import '../css/Blog.css';
 
 import {blogData} from "@/constants/blogData.ts"
 
 export default function BlogPage() {
+    const { isAuthenticated } = useAuthStore();
+    
     return (
         <div className="blogContainer">
-            <AfterNavigation />
+            {isAuthenticated ? <AfterNavigation /> : <BeforeNavigation />}
             
             <main className="blogMain">
                 <header className="blogHeader">

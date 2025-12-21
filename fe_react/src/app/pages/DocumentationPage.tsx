@@ -1,10 +1,14 @@
 import AfterNavigation from "@/components/AfterNavigation";
+import BeforeNavigation from "@/components/BeforeNavigation";
 import Footer from "@/components/Footer";
+import { useAuthStore } from "@/store/authStore";
 
 export default function DocumentationPage() {
+    const { isAuthenticated } = useAuthStore();
+    
     return (
          <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-            <AfterNavigation />
+            {isAuthenticated ? <AfterNavigation /> : <BeforeNavigation />}
             <main className="flex-1 w-full mx-auto !p-4 flex flex-col md:flex-row items-start gap-8">
                 {/* Left : Structure */}
                 <aside className="w-full md:w-40 flex-shrink-0 border-b md:border-b-0 md:border-r border-border flex flex-col gap-6 !py-4">

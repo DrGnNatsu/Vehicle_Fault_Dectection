@@ -1,4 +1,4 @@
-import { Camera, Moon, Sun } from "lucide-react";
+import { Moon, Sun, UserCircle } from "lucide-react";
 import { useEffect } from "react";
 import { NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
@@ -7,12 +7,12 @@ import { useThemeStore } from "@/store/themeStore";
 import { cn } from "@/utils/utils";
 import './css/AfterNavigation.css';
 
-const navLinks = [
-  { to: "/home", text: "Home" },
-  { to: "/blog", text: "Blog" },
-  { to: "/documentation", text: "Documentation" },
-  { to: "/about", text: "About Us" },
-  { to: "/search", text: "Search" },
+const allNavLinks = [
+  { to: "/home", text: "Home", roles: ['admin', 'police'] },
+  { to: "/blog", text: "Blog", roles: ['admin', 'police'] },
+  { to: "/documentation", text: "Documentation", roles: ['admin', 'police'] },
+  { to: "/about", text: "About Us", roles: ['admin', 'police'] },
+  { to: "/search", text: "Search", roles: ['admin', 'police', 'user'] },
 ];
 
 export default function AfterNavigation() {
@@ -30,18 +30,19 @@ export default function AfterNavigation() {
         {/* Left: Logo */}
         <div className="afterNavBrand">
           <div 
-            onClick={() => navigate("/home")} 
+            onClick={() => navigate(role?.toLowerCase() === 'user' ? "/search" : "/home")} 
             className="afterNavLogoLink cursor-pointer"
           >
-            <Camera className="afterNavLogo" />
             <span className="afterNavTitle">CameraLanguage</span>
           </div>
         </div>
 
         {/* Center: Links */}
         <div className="afterNavLinks">
-          {navLinks.map((link) => (
-            <NavItem key={link.to} to={link.to} text={link.text} />
+          {allNavLinks
+            .filter(link => !link.roles || link.roles.includes(role?.toLowerCase() || ''))
+            .map((link) => (
+              <NavItem key={link.to} to={link.to} text={link.text} />
           ))}
           {role?.toLowerCase() === 'admin' && (
             <NavItem to="/manage-users" text="Manage Users" />
@@ -65,6 +66,16 @@ export default function AfterNavigation() {
               {isDarkMode ? "Dark" : "Light"}
             </span>
           </div>
+          <RouterNavLink 
+            to="/account-settings" 
+            className={({ isActive }) => cn(
+              "p-1.5 rounded-full transition-colors hover:bg-muted",
+              isActive ? "text-primary" : "text-muted-foreground"
+            )}
+            title="Account Settings"
+          >
+            <UserCircle className="w-6 h-6" />
+          </RouterNavLink>
         </div>
       </div>
     </nav>

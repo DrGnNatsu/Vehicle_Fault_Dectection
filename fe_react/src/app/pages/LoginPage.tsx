@@ -26,7 +26,9 @@ export default function LoginPage() {
       const data = await authService.login(email, password);
       setAuth(data.jwt_token, data.role);
       console.log("Login successful:", data);
-      navigate("/home");
+      
+      const defaultPath = data.role.toLowerCase() === 'user' ? '/search' : '/home';
+      navigate(defaultPath);
     } catch (err: any) {
       console.error("Login failed:", err);
       setError(err.response?.data?.message || "Login failed. Please check your credentials.");
