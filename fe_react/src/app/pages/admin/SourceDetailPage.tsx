@@ -110,7 +110,7 @@ const SourceDetailPage: React.FC = () => {
 
   const handleBack = () => {
     if (role?.toLowerCase() === "admin") {
-      navigate("/sources");
+      navigate("/home");
     } else {
       navigate("/home");
     }
