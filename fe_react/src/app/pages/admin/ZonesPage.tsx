@@ -178,11 +178,11 @@ export default function ZonesPage() {
             <Table>
                 <TableHeader>
                 <TableRow className="bg-muted/50">
-                    <TableHead className="w-[200px]">Name</TableHead>
+                    <TableHead className="w-[18rem]">Name</TableHead>
                     <TableHead>Source ID</TableHead>
                     <TableHead>Coordinates</TableHead>
-                    <TableHead className="w-[180px]">Created At</TableHead>
-                    <TableHead className="text-right w-[100px]">Actions</TableHead>
+                    <TableHead className="w-[18rem]">Created At</TableHead>
+                    <TableHead className="text-center w-[18rem]">Actions</TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>
