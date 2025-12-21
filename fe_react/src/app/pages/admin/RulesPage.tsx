@@ -29,6 +29,7 @@ import { cn } from "@/utils/utils";
 
 export default function RulesPage() {
   const [rules, setRules] = useState<Rule[]>([]);
+  const [expandedRules, setExpandedRules] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -56,6 +57,18 @@ export default function RulesPage() {
   useEffect(() => {
     loadRules();
   }, []);
+
+  const toggleExpand = (id: string) => {
+    setExpandedRules((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
 
   const handleCreateRule = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,8 +216,15 @@ export default function RulesPage() {
                           {rule.name}
                         </div>
                       </TableCell>
-                      <TableCell>
-                        <code className="text-xs bg-muted px-1.5 py-0.5 rounded text-muted-foreground block truncate max-w-[400px]">
+                      <TableCell className="align-top">
+                        <code 
+                          onClick={() => toggleExpand(rule.id)}
+                          className={cn(
+                            "text-xs bg-muted px-1.5 py-1 rounded text-muted-foreground block border border-transparent hover:border-border transition-all cursor-pointer",
+                            expandedRules.has(rule.id) ? "whitespace-pre-wrap break-all pr-4" : "truncate max-w-[200px]"
+                          )}
+                          title={!expandedRules.has(rule.id) ? "Click to expand" : "Click to collapse"}
+                        >
                           {rule.dsl_content}
                         </code>
                       </TableCell>

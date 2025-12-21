@@ -37,13 +37,11 @@ export default function AfterNavigation() {
     <nav className="afterNavContainer">
       <div className="afterNavContent">
         {/* Left: Logo */}
-        <div className="afterNavBrand">
-          <div 
-            onClick={() => navigate(role?.toLowerCase() === 'user' ? "/search" : "/home")} 
-            className="afterNavLogoLink cursor-pointer"
-          >
-            <span className="afterNavTitle">CameraLanguage</span>
-          </div>
+        <div 
+          onClick={() => navigate(role?.toLowerCase() === 'user' ? "/search" : "/home")} 
+          className="afterNavBrand cursor-pointer"
+        >
+          <span className="afterNavTitle">CameraLanguage</span>
         </div>
 
         {/* Center: Links */}
@@ -56,7 +54,7 @@ export default function AfterNavigation() {
 
           {isAdmin && (
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
+              <DropdownMenuTrigger className="afterNavItem flex items-center gap-1 outline-none">
                 Admin <ChevronDown className="w-4 h-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">

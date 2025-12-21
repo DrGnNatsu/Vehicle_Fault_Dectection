@@ -1,35 +1,27 @@
 @import "@/index.css";
 
 .afterNavContainer {
-  @apply sticky top-0 z-50 w-full h-20 bg-background/80 backdrop-blur border-b border-border shadow-sm flex justify-center;
+    @apply w-full h-20 bg-background/80 backdrop-blur border-b border-border sticky top-0 z-50 flex justify-center;
 }
 
 .afterNavContent {
-  @apply w-full max-w-7xl px-4 h-full flex items-center justify-between relative;
+    @apply w-full max-w-7xl px-6 h-full flex items-center justify-between;
 }
 
 .afterNavBrand {
-  @apply flex items-center;
-}
-
-.afterNavLogoLink {
-  @apply flex items-center gap-2 text-foreground hover:opacity-80 transition-opacity;
-}
-
-.afterNavLogo {
-  @apply w-6 h-6 text-primary transition-transform hover:scale-105;
+    @apply flex items-center transition-opacity hover:opacity-90;
 }
 
 .afterNavTitle {
-  @apply text-lg font-bold tracking-tight hidden sm:block;
+  @apply text-foreground text-xl font-bold tracking-tight;
 }
 
 .afterNavLinks {
-  @apply hidden md:flex items-center gap-8;
+    @apply hidden md:flex items-center gap-8;
 }
 
 .afterNavItem {
-  @apply text-lg font-medium text-muted-foreground hover:text-primary transition-colors;
+    @apply text-sm font-medium text-muted-foreground hover:text-primary transition-colors;
 }
 
 .afterNavItemActive {
@@ -37,13 +29,23 @@
 }
 
 .afterNavActions {
-  @apply flex items-center gap-6;
+    @apply flex items-center gap-3 sm:gap-4;
 }
 
 .afterNavThemeToggle {
-  @apply flex items-center gap-3;
+    @apply flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full border border-border bg-muted/30;
 }
 
 .afterNavThemeLabel {
-  @apply text-sm font-medium text-foreground hidden sm:inline;
+    @apply text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden sm:block;
+}
+
+@media (max-width: 640px) {
+    .afterNavContent {
+        @apply px-4;
+    }
+    
+    .afterNavTitle {
+        @apply text-lg;
+    }
 }
