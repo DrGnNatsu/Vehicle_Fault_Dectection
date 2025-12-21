@@ -14,6 +14,8 @@ import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import ManageUsersPage from "./pages/ManageUsersPage.tsx";
 import RulesPage from "./pages/admin/RulesPage.tsx";
 import ViolationsPage from "./pages/admin/ViolationsPage.tsx";
+import ZonesPage from "./pages/admin/ZonesPage.tsx";
+import AssignCamerasPage from "./pages/admin/AssignCamerasPage.tsx";
 import Camera from "./pages/camera";
 import SearchPage from "./pages/SearchPage.tsx";
 import { useAuthStore } from "@/store/authStore";
@@ -102,8 +104,24 @@ const App = () => {
           <Route 
             path="violations" 
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
+              <ProtectedRoute allowedRoles={['admin', 'police']}>
                 <PageTransition><ViolationsPage /></PageTransition>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="zones" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <PageTransition><ZonesPage /></PageTransition>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="assignments" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <PageTransition><AssignCamerasPage /></PageTransition>
               </ProtectedRoute>
             } 
           />

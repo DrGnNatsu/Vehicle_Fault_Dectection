@@ -1,7 +1,8 @@
-import { Moon, Sun, UserCircle, ChevronDown, Users, FileText, Activity } from "lucide-react";
+import { Moon, Sun, UserCircle, ChevronDown, Users, FileText, Activity, MapPin, Menu, Shield } from "lucide-react";
 import { useEffect } from "react";
 import { NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -17,7 +18,8 @@ import './css/AfterNavigation.css';
 
 const publicNavLinks = [
   { to: "/home", text: "Home", roles: ['admin', 'police'] },
-  { to: "/search", text: "Search Violations", roles: ['admin', 'police', 'user'] },
+  { to: "/search", text: "My Violations", roles: ['user'] },
+  { to: "/violations", text: "Violations", roles: ['police'] },
   { to: "/documentation", text: "Docs", roles: ['admin', 'police'] },
   { to: "/about", text: "About", roles: ['admin', 'police'] },
 ];
@@ -35,7 +37,7 @@ export default function AfterNavigation() {
 
   return (
     <nav className="afterNavContainer">
-      <div className="afterNavContent">
+      <div className="afterNavContent flex items-center justify-between">
         {/* Left: Logo */}
         <div 
           onClick={() => navigate(role?.toLowerCase() === 'user' ? "/search" : "/home")} 
@@ -44,8 +46,8 @@ export default function AfterNavigation() {
           <span className="afterNavTitle">CameraLanguage</span>
         </div>
 
-        {/* Center: Links */}
-        <div className="afterNavLinks">
+        {/* Center: Desktop Links */}
+        <div className="afterNavLinks hidden md:flex items-center gap-1">
           {publicNavLinks
             .filter(link => !link.roles || link.roles.includes(role?.toLowerCase() || ''))
             .map((link) => (
@@ -72,14 +74,22 @@ export default function AfterNavigation() {
                   <Activity className="mr-2 h-4 w-4" />
                   <span>Violations Log</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/zones")}>
+                  <MapPin className="mr-2 h-4 w-4" />
+                  <span>Zones Management</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/assignments")}>
+                  <Shield className="mr-2 h-4 w-4" />
+                  <span>Assign Cameras</span>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
         </div>
 
-        {/* Right: Actions */}
-        <div className="afterNavActions">
-          <div className="afterNavThemeToggle">
+        {/* Right: Actions (Desktop + Mobile common) */}
+        <div className="afterNavActions flex items-center gap-4">
+          <div className="afterNavThemeToggle hidden md:flex">
             {isDarkMode ? (
               <Moon className="w-4 h-4 text-primary" />
             ) : (
@@ -109,6 +119,59 @@ export default function AfterNavigation() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Mobile Menu Trigger */}
+          <div className="md:hidden">
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Menu className="w-6 h-6" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>Navigation</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {publicNavLinks
+                        .filter(link => !link.roles || link.roles.includes(role?.toLowerCase() || ''))
+                        .map(link => (
+                            <DropdownMenuItem key={link.to} onClick={() => navigate(link.to)}>
+                                {link.text}
+                            </DropdownMenuItem>
+                    ))}
+                    
+                    {isAdmin && (
+                        <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuLabel>Admin</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => navigate("/manage-users")}>
+                                <Users className="mr-2 h-4 w-4" /> Manage Users
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate("/rules")}>
+                                <FileText className="mr-2 h-4 w-4" /> Rules
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate("/violations")}>
+                                <Activity className="mr-2 h-4 w-4" /> Violations
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate("/zones")}>
+                                <MapPin className="mr-2 h-4 w-4" /> Zones
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate("/assignments")}>
+                                <Shield className="mr-2 h-4 w-4" /> Assign Cameras
+                            </DropdownMenuItem>
+                        </>
+                    )}
+
+                    <DropdownMenuSeparator />
+                    <div className="flex items-center justify-between px-2 py-2">
+                         <span className="text-sm">Dark Mode</span>
+                         <Switch
+                            checked={isDarkMode}
+                            onCheckedChange={toggleDarkMode}
+                        />
+                    </div>
+                </DropdownMenuContent>
+             </DropdownMenu>
+          </div>
         </div>
       </div>
     </nav>

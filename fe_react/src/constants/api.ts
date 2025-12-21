@@ -22,4 +22,14 @@ export const API_ENDPOINTS = {
     DETAILS: (id: string) => `/api/v1/violations/${id}`,
     MY: '/api/v1/violations/my',
   },
+  ZONES: {
+    BASE: '/api/v1/zones',
+    DETAILS: (id: string) => `/api/v1/zones/${id}`,
+  },
+  ASSIGNMENTS: {
+    BASE: '/api/v1/assignments',
+    POLICE: (id: string) => `/api/v1/assignments/police/${id}`,
+    MY: '/api/v1/assignments/my-sources',
+    ALL: '/api/v1/assignments/all',
+  },
 };
