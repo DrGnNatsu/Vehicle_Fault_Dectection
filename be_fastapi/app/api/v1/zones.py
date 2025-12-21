@@ -3,12 +3,12 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from uuid import UUID
 
-from app.database.session import get_db
-from app.models.zone import Zone
-from app.models.sources import Source
-from app.models.user import User
-from app.api.v1.dependencies import require_admin
-from app.schemas.zone import ZoneResponse, ZoneCreateRequest, ZoneUpdateRequest
+from database.session import get_db
+from models.zone import Zone
+from models.sources import Source
+from models.user import User
+from api.v1.dependencies import require_admin
+from schemas.zone import ZoneResponse, ZoneCreateRequest, ZoneUpdateRequest
 
 router = APIRouter(prefix="/zones", tags=["zones"])
 

@@ -1,7 +1,7 @@
 from antlr4 import InputStream, CommonTokenStream
-from app.engine.dsl.CompiledFiles.ViolationsLexer import ViolationsLexer
-from app.engine.dsl.CompiledFiles.ViolationsParser import ViolationsParser
-from app.engine.dsl.CompiledFiles.ViolationsVisitor import ViolationsVisitor
+from engine.dsl.CompiledFiles.ViolationsLexer import ViolationsLexer
+from engine.dsl.CompiledFiles.ViolationsParser import ViolationsParser
+from engine.dsl.CompiledFiles.ViolationsVisitor import ViolationsVisitor
 from shapely.geometry import Point, Polygon
 from typing import Dict, Any, Optional
 

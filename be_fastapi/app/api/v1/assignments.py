@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from uuid import UUID
-from app.database.session import get_db
-from app.service.assignment_service import AssignmentService
-from app.schemas.assignment import (
+from database.session import get_db
+from service.assignment_service import AssignmentService
+from schemas.assignment import (
     AssignmentRequest,
     AssignmentResponse,
     SourceAssignmentInfo,
     PoliceAssignmentInfo
 )
-from app.api.v1.dependencies import require_admin, require_police, get_current_user
-from app.models.user import User
+from api.v1.dependencies import require_admin, require_police, get_current_user
+from models.user import User
 
 router = APIRouter(prefix="/assignments", tags=["assignments"])
 

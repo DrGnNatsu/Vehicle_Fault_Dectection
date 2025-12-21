@@ -4,12 +4,12 @@ from typing import List, Optional
 from uuid import UUID
 from datetime import datetime, date
 
-from app.database.session import get_db
-from app.models.violation import Violation
-from app.models.user import User
-from app.service.assignment_service import AssignmentService
-from app.api.v1.dependencies import get_current_user
-from app.schemas.violation import ViolationResponse
+from database.session import get_db
+from models.violation import Violation
+from models.user import User
+from service.assignment_service import AssignmentService
+from api.v1.dependencies import get_current_user
+from schemas.violation import ViolationResponse
 
 router = APIRouter(prefix="/violations", tags=["violations"])
 

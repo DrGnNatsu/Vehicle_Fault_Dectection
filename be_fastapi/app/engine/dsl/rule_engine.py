@@ -1,15 +1,15 @@
 from sqlalchemy.orm import Session
-from app.models.rule import Rule
-from app.models.zone import Zone
-from app.models.violation import Violation
-from app.engine.dsl.evaluator import DSLEvaluator
-from app.utils.evidence.evidence import save_snapshot
-from app.websockets.manager import manager
+from models.rule import Rule
+from models.zone import Zone
+from models.violation import Violation
+from engine.dsl.evaluator import DSLEvaluator
+from utils.evidence.evidence import save_snapshot
+from sockets.manager import manager
 from shapely.geometry import Point, Polygon
 from datetime import datetime
 from uuid import uuid4
 import logging
-from app.models.source_rule import source_rules
+from models.source_rule import source_rules
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,21 @@ def evaluate_frame(db: Session, source_id: str, ai_json: dict, current_frame) ->
         return violations
 
     zones_query = db.query(Zone).filter(Zone.source_id == source_id).all()
-    zones = {z.name: Polygon(z.coordinates) for z in zones_query}
+    zones = {}
+    for z in zones_query:
+        try:
+            import json
+            points = z.coordinates
+            if isinstance(points, str):
+                points = json.loads(points)
+            if isinstance(points, dict) and "points" in points:
+                points = points["points"]
+            
+            if points and isinstance(points, list) and len(points) >= 3:
+                 zones[z.name] = Polygon(points)
+        except Exception as e:
+            logger.error(f"Error parsing zone {z.name} in rule_engine: {e}")
+            continue
 
     scene_data = ai_json.get("scene", {})
 

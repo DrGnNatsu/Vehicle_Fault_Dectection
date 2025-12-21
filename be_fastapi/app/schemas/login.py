@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from pydantic import EmailStr
 
-from app.enum.role import Role
+from enums.role import Role
 
 """
 DTOs for user login functionality.

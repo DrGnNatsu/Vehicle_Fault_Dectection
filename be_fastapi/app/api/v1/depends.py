@@ -1,7 +1,7 @@
 from fastapi import Depends
 
-from app.repository.user_repo import UserRepository
-from app.service.auth_service import AuthService
+from repository.user_repo import UserRepository
+from service.auth_service import AuthService
 
 
 # 1. Injectable Repository

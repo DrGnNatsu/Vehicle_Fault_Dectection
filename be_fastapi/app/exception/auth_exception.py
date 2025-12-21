@@ -1,6 +1,6 @@
 from fastapi import status
 
-from app.exception.base_exception import AppException
+from exception.base_exception import AppException
 
 """
 Login related exceptions

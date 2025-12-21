@@ -16,6 +16,8 @@ import RulesPage from "./pages/admin/RulesPage.tsx";
 import ViolationsPage from "./pages/admin/ViolationsPage.tsx";
 import ZonesPage from "./pages/admin/ZonesPage.tsx";
 import AssignCamerasPage from "./pages/admin/AssignCamerasPage.tsx";
+import SourceManagerPage from "./pages/admin/SourceManagerPage.tsx";
+import SourceDetailPage from "./pages/admin/SourceDetailPage.tsx";
 import Camera from "./pages/camera";
 import SearchPage from "./pages/SearchPage.tsx";
 import { useAuthStore } from "@/store/authStore";
@@ -38,107 +40,203 @@ const App = () => {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           {/* Public Routes */}
-          <Route index element={<PageTransition><LandingPage /></PageTransition>} />
-          <Route path="landing" element={<PageTransition><LandingPage /></PageTransition>} />
-          <Route path="about" element={<PageTransition><AboutUsPage /></PageTransition>} />
-          <Route path="blog" element={<PageTransition><BlogPage /></PageTransition>} />
-          <Route path="documentation" element={<PageTransition><DocumentationPage /></PageTransition>} />
-          <Route path="login" element={<PageTransition><LoginPage /></PageTransition>} />
-          <Route path="register" element={<PageTransition><RegisterPage /></PageTransition>} />
-          <Route path="reset-password" element={<PageTransition><ResetPasswordPage /></PageTransition>} />
+          <Route
+            index
+            element={
+              <PageTransition>
+                <LandingPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="landing"
+            element={
+              <PageTransition>
+                <LandingPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="about"
+            element={
+              <PageTransition>
+                <AboutUsPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="blog"
+            element={
+              <PageTransition>
+                <BlogPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="documentation"
+            element={
+              <PageTransition>
+                <DocumentationPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <PageTransition>
+                <LoginPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="register"
+            element={
+              <PageTransition>
+                <RegisterPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="reset-password"
+            element={
+              <PageTransition>
+                <ResetPasswordPage />
+              </PageTransition>
+            }
+          />
           <Route path="logout" element={<Logout />} />
 
           {/* Protected Routes - Police & Admin */}
-          <Route 
-            path="home" 
+          <Route
+            path="home"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'police']}>
-                <PageTransition><HomePage /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin", "police"]}>
+                <PageTransition>
+                  <HomePage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="camera" 
+          <Route
+            path="camera/:id"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'police']}>
-                <PageTransition><Camera /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin", "police"]}>
+                <PageTransition>
+                  <SourceDetailPage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* Protected Routes - User, Police & Admin */}
-          <Route 
-            path="search" 
+          <Route
+            path="search"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'police', 'user']}>
-                <PageTransition><SearchPage /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin", "police", "user"]}>
+                <PageTransition>
+                  <SearchPage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="account-settings" 
+          <Route
+            path="account-settings"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'police', 'user']}>
-                <PageTransition><AccountSetting /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin", "police", "user"]}>
+                <PageTransition>
+                  <AccountSetting />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* Protected Routes - Admin Only */}
-          <Route 
-            path="manage-users" 
+          <Route
+            path="manage-users"
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <PageTransition><ManageUsersPage /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <PageTransition>
+                  <ManageUsersPage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="rules" 
+          <Route
+            path="rules"
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <PageTransition><RulesPage /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <PageTransition>
+                  <RulesPage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="violations" 
+          <Route
+            path="violations"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'police']}>
-                <PageTransition><ViolationsPage /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin", "police"]}>
+                <PageTransition>
+                  <ViolationsPage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="zones" 
+          <Route
+            path="zones"
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <PageTransition><ZonesPage /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <PageTransition>
+                  <ZonesPage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="assignments" 
+          <Route
+            path="assignments"
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <PageTransition><AssignCamerasPage /></PageTransition>
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <PageTransition>
+                  <AssignCamerasPage />
+                </PageTransition>
               </ProtectedRoute>
-            } 
+            }
+          />
+          <Route
+            path="sources"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <PageTransition>
+                  <SourceManagerPage />
+                </PageTransition>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="sources/:id"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <PageTransition>
+                  <SourceDetailPage />
+                </PageTransition>
+              </ProtectedRoute>
+            }
           />
 
           {/* Wildcard / Re-routing */}
-          <Route 
-            path="*" 
+          <Route
+            path="*"
             element={
-              <Navigate 
+              <Navigate
                 to={
-                  !isAuthenticated 
-                    ? "/" 
-                    : (role?.toLowerCase() === 'user' ? "/search" : "/home")
-                } 
-                replace 
+                  !isAuthenticated
+                    ? "/"
+                    : role?.toLowerCase() === "user"
+                    ? "/search"
+                    : "/home"
+                }
+                replace
               />
-            } 
+            }
           />
         </Routes>
       </AnimatePresence>

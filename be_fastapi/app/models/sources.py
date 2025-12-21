@@ -1,6 +1,8 @@
 from sqlalchemy import Column, String, Boolean, TIMESTAMP, text, ForeignKey, Integer, Index
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from .base import Base
+from .source_rule import source_rules
 
 class Source(Base):
     __tablename__ = "sources"
@@ -20,3 +22,5 @@ class Source(Base):
         Index('ix_sources_source_type', 'source_type'),
         Index('ix_sources_is_active', 'is_active'),
     )
+
+    rules = relationship("Rule", secondary="source_rules", backref="sources")

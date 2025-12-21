@@ -1,5 +1,3 @@
-# seed_data.py - Test đầy đủ 28 API
-
 import uuid
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session

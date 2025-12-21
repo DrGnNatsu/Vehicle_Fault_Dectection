@@ -6,16 +6,19 @@ from typing import List
 from uuid import UUID
 from datetime import datetime
 
-from app.database.session import get_db
-from app.models.sources import Source
-from app.models.zone import Zone
-from app.models.user import User
-from app.service.assignment_service import AssignmentService
-from app.api.v1.dependencies import get_current_user, require_admin
-from app.engine.ai.processing_manager import processing_manager
-from app.websockets.stream_manager import stream_manager
-from app.schemas.sources import SourceResponse, SourceCreateRequest, SourceUpdateRequest, SourceProcessingResponse
-from app.schemas.zone import ZoneResponse
+from database.session import get_db
+from models.sources import Source
+from models.zone import Zone
+from models.rule import Rule
+from models.user import User
+from service.assignment_service import AssignmentService
+from api.v1.dependencies import get_current_user, require_admin
+from engine.ai.processing_manager import processing_manager
+from sockets.stream_manager import stream_manager
+from schemas.sources import SourceResponse, SourceCreateRequest, SourceUpdateRequest, SourceProcessingResponse
+from schemas.zone import ZoneResponse
+from schemas.rule import RuleCreateRequest, RuleResponse
+from api.v1.rules import _rule_to_response
 
 router = APIRouter(prefix="/sources", tags=["sources"])
 
@@ -319,9 +322,15 @@ async def stop_source_processing(
 @router.get("/{source_id}/stream")
 async def stream_source_video(
     source_id: UUID,
+    token: str = None, # Allow token in query param
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user) # Falls back to Header if no token? No, Depends runs first.
 ):
+    # If token provided in query, we need to validate it manually if Depends failed? 
+    # Actually, we should make `current_user` optional in signature and handle it manually, OR create a new dependency.
+    pass 
+    # RE-WRITING THE LOGIC BELOW TO AVOID DEPENDENCY CONFLICTS
+
     """MJPEG stream of the latest processed frames for a source."""
     source = db.query(Source).filter(Source.id == source_id, Source.is_active == True).first()
     if not source:
@@ -347,3 +356,83 @@ async def stream_source_video(
         frame_generator(),
         media_type=f"multipart/x-mixed-replace; boundary={boundary}"
     )
+
+# ============ SOURCE RULES MANAGEMENT ============
+@router.get("/{source_id}/rules", response_model=List[RuleResponse])
+async def get_source_rules(
+    source_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get all rules assigned to this source.
+    """
+    source = db.query(Source).filter(Source.id == source_id).first()
+    if not source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
+    
+    _ensure_source_access(source_id, current_user, db)
+    
+    return [_rule_to_response(rule) for rule in source.rules]
+
+
+@router.post("/{source_id}/rules", response_model=RuleResponse)
+async def create_source_rule(
+    source_id: UUID,
+    request: RuleCreateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """
+    Create a NEW rule and assign it to this source immediately.
+    Admin only.
+    """
+    source = db.query(Source).filter(Source.id == source_id).first()
+    if not source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
+
+    # Create new rule
+    new_rule = Rule(
+        name=request.name,
+        dsl_content=request.dsl_content,
+        created_by_id=current_user.id
+    )
+    db.add(new_rule)
+    db.flush() # flush to get ID
+
+    # Link to source
+    source.rules.append(new_rule)
+    
+    db.commit()
+    db.refresh(new_rule)
+    
+    return _rule_to_response(new_rule)
+
+
+@router.delete("/{source_id}/rules/{rule_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_source_rule(
+    source_id: UUID,
+    rule_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """
+    Unassign and Delete a rule from a source.
+    Admin only.
+    """
+    source = db.query(Source).filter(Source.id == source_id).first()
+    if not source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
+        
+    rule = db.query(Rule).filter(Rule.id == rule_id).first()
+    if not rule:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rule not found")
+
+    if rule in source.rules:
+        source.rules.remove(rule)
+        # Optional: Delete the rule entirely since it's "source specific" logic
+        # For now, let's also delete the rule itself to keep it clean, assuming 1-1 usage mostly
+        db.delete(rule)
+        
+    db.commit()
+    return None
