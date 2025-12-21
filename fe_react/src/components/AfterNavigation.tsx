@@ -1,21 +1,23 @@
 import { Camera, Moon, Sun } from "lucide-react";
 import { useEffect } from "react";
-import { NavLink as RouterNavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
+import { useAuthStore } from "@/store/authStore";
 import { useThemeStore } from "@/store/themeStore";
 import { cn } from "@/utils/utils";
 import './css/AfterNavigation.css';
 
 const navLinks = [
-  { to: "/home", text: "Your Camera" },
-  { to: "/blog", text: "BlogPage" },
-  { to: "/documentation", text: "DocumentationPage" },
+  { to: "/home", text: "Home" },
+  { to: "/blog", text: "Blog" },
+  { to: "/documentation", text: "Documentation" },
   { to: "/about", text: "About Us" },
   { to: "/search", text: "Search" },
 ];
 
 export default function AfterNavigation() {
   const { isDarkMode, toggleDarkMode, initTheme } = useThemeStore();
+  const { role } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +43,9 @@ export default function AfterNavigation() {
           {navLinks.map((link) => (
             <NavItem key={link.to} to={link.to} text={link.text} />
           ))}
+          {role?.toLowerCase() === 'admin' && (
+            <NavItem to="/manage-users" text="Manage Users" />
+          )}
         </div>
 
         {/* Right: Theme Toggle */}

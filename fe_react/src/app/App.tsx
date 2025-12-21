@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import PageTransition from "@/components/PageTransition";
 import LandingPage from "./pages/LandingPage.tsx";
@@ -10,11 +10,14 @@ import DocumentationPage from "./pages/DocumentationPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
+import ManageUsersPage from "./pages/ManageUsersPage.tsx";
 import Camera from "./pages/camera";
 import SearchPage from "./pages/SearchPage.tsx";
+import { useAuthStore } from "@/store/authStore";
 
 const App = () => {
   const location = useLocation();
+  const { isAuthenticated, role } = useAuthStore();
 
   return (
     <div className="app-container">
@@ -31,8 +34,16 @@ const App = () => {
           <Route path="login" element={<PageTransition><LoginPage /></PageTransition>} />
           <Route path="register" element={<PageTransition><RegisterPage /></PageTransition>} />
           <Route path="reset-password" element={<PageTransition><ResetPasswordPage /></PageTransition>} />
+          <Route 
+            path="manage-users" 
+            element={
+              role?.toLowerCase() === 'admin' 
+                ? <PageTransition><ManageUsersPage /></PageTransition> 
+                : <Navigate to="/home" replace />
+            } 
+          />
           <Route path="search" element={<PageTransition><SearchPage /></PageTransition>} />
-          <Route path="*" element={<PageTransition><HomePage /></PageTransition>} />
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/home" : "/"} replace />} />
         </Routes>
       </AnimatePresence>
     </div>
