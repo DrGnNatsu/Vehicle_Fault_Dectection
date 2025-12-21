@@ -1,4 +1,6 @@
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
@@ -10,7 +12,9 @@ from app.models.zone import Zone
 from app.models.user import User
 from app.service.assignment_service import AssignmentService
 from app.api.v1.dependencies import get_current_user, require_admin
-from app.schemas.sources import SourceResponse, SourceCreateRequest, SourceUpdateRequest
+from app.engine.ai.processing_manager import processing_manager
+from app.websockets.stream_manager import stream_manager
+from app.schemas.sources import SourceResponse, SourceCreateRequest, SourceUpdateRequest, SourceProcessingResponse
 from app.schemas.zone import ZoneResponse
 
 router = APIRouter(prefix="/sources", tags=["sources"])
@@ -39,6 +43,29 @@ def _zone_to_response(zone: Zone) -> ZoneResponse:
         coordinates=zone.coordinates,
         created_at=zone.created_at.isoformat() if zone.created_at else "",
         updated_at=zone.updated_at.isoformat() if zone.updated_at else ""
+    )
+
+
+def _ensure_source_access(source_id: UUID, current_user: User, db: Session):
+    """Verify that the user can operate on the given source."""
+    user_role = current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
+    user_role = user_role.lower()
+
+    if user_role == "admin":
+        return
+
+    if user_role == "police":
+        assigned_source_ids = AssignmentService.get_assigned_source_ids(db, current_user.id)
+        if source_id not in assigned_source_ids:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You don't have access to this source"
+            )
+        return
+
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="You don't have access to this source"
     )
 
 
@@ -235,3 +262,88 @@ async def get_source_zones(
     zones = db.query(Zone).filter(Zone.source_id == source_id).all()
     
     return [_zone_to_response(zone) for zone in zones]
+
+
+@router.post("/{source_id}/processing/start", response_model=SourceProcessingResponse)
+async def start_source_processing(
+    source_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Start background processing for a source (camera/rtsp/file)."""
+    source = db.query(Source).filter(Source.id == source_id, Source.is_active == True).first()
+    if not source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found or inactive")
+
+    _ensure_source_access(source_id, current_user, db)
+
+    video_source = source.camera_url or source.file_path
+    if not video_source:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Source is missing camera_url or file_path")
+
+    started = processing_manager.start(str(source.id), video_source)
+    if not started:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Processing already running for this source")
+
+    return SourceProcessingResponse(
+        source_id=source.id,
+        status="running",
+        message="Processing started"
+    )
+
+
+@router.post("/{source_id}/processing/stop", response_model=SourceProcessingResponse)
+async def stop_source_processing(
+    source_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Stop background processing for a source."""
+    source = db.query(Source).filter(Source.id == source_id).first()
+    if not source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
+
+    _ensure_source_access(source_id, current_user, db)
+
+    stopped = processing_manager.stop(str(source.id))
+    if not stopped:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Processing is not running for this source")
+
+    return SourceProcessingResponse(
+        source_id=source.id,
+        status="stopped",
+        message="Processing stopped"
+    )
+
+
+@router.get("/{source_id}/stream")
+async def stream_source_video(
+    source_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """MJPEG stream of the latest processed frames for a source."""
+    source = db.query(Source).filter(Source.id == source_id, Source.is_active == True).first()
+    if not source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found or inactive")
+
+    _ensure_source_access(source_id, current_user, db)
+
+    boundary = "frame"
+    source_id_str = str(source_id)
+
+    async def frame_generator():
+        while True:
+            frame = stream_manager.get_frame(source_id_str)
+            if frame:
+                yield (
+                    f"--{boundary}\r\n"
+                    "Content-Type: image/jpeg\r\n"
+                    f"Content-Length: {len(frame)}\r\n\r\n"
+                ).encode("utf-8") + frame + b"\r\n"
+            await asyncio.sleep(0.1)
+
+    return StreamingResponse(
+        frame_generator(),
+        media_type=f"multipart/x-mixed-replace; boundary={boundary}"
+    )

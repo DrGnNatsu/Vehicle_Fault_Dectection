@@ -42,3 +42,9 @@ class ZoneResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SourceProcessingResponse(BaseModel):
+    source_id: UUID
+    status: str
+    message: str

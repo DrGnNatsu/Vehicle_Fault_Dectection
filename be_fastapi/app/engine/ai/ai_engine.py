@@ -2,7 +2,9 @@ import json
 import torch
 import numpy as np
 import argparse
+import threading
 from datetime import datetime
+from typing import Optional
 from ultralytics import YOLO # type: ignore
 from shapely.geometry import Point, Polygon
 from collections import defaultdict
@@ -10,15 +12,22 @@ from sqlalchemy.orm import Session
 from app.database.session import SessionLocal
 from app.models.zone import Zone
 from app.engine.dsl.rule_engine import evaluate_frame
+from app.websockets.stream_manager import stream_manager
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class VideoProcessor:
-    def __init__(self, model_path='app/engine/ckpt/best.pt', source_id=None):
+    def __init__(
+        self,
+        model_path: str = 'app/engine/ckpt/best.pt',
+        source_id=None,
+        stop_event: Optional[threading.Event] = None
+    ):
         self.source_id = source_id
         self.device = 0 if torch.cuda.is_available() else 'cpu'
+        self.stop_event = stop_event or threading.Event()
         logger.info(f"[Source {self.source_id}] Using device: {'GPU' if self.device == 0 else 'CPU'}")
 
         self.model = YOLO(model_path, task='detect')
@@ -30,6 +39,8 @@ class VideoProcessor:
         }
         
         self.zones = {}
+        self.zone_points = {}
+        self.zone_centroids = {}
         if self.source_id:
             self.load_zones_from_db(self.source_id)
         else:
@@ -52,6 +63,10 @@ class VideoProcessor:
                     if points and isinstance(points, list) and len(points) >= 3: # type: ignore
                         poly = Polygon(points)
                         self.zones[z.name] = poly
+                        int_points = [(int(p[0]), int(p[1])) for p in points]
+                        self.zone_points[z.name] = int_points
+                        centroid = poly.centroid
+                        self.zone_centroids[z.name] = (int(centroid.x), int(centroid.y))
                     else:
                         logger.warning(f"Zone '{z.name}' has invalid coordinates.")
                 except Exception as e:
@@ -69,6 +84,38 @@ class VideoProcessor:
             if z_poly.contains(point):
                 return z_name
         return None
+
+    def request_stop(self):
+        self.stop_event.set()
+
+    def _draw_zones(self, frame):
+        import cv2
+        if not self.zone_points:
+            return
+        for name, pts in self.zone_points.items():
+            if len(pts) < 3:
+                continue
+            cv2.polylines(frame, [np.array(pts, dtype=np.int32)], isClosed=True, color=(255, 0, 0), thickness=2)
+            centroid = self.zone_centroids.get(name)
+            if centroid:
+                cv2.putText(frame, name, centroid, cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2, cv2.LINE_AA)
+
+    def _draw_detections(self, frame, dsl_objects, violating_bboxes=None):
+        import cv2
+        violating_bboxes = violating_bboxes or set()
+        for obj in dsl_objects:
+            bbox = obj.get("bbox") or []
+            if len(bbox) != 4:
+                continue
+            x1, y1, x2, y2 = bbox
+            class_name = obj.get("class_name", "")
+            zone_name = obj.get("current_zone")
+            label = class_name if not zone_name else f"{class_name} @ {zone_name}"
+            color = (0, 255, 0)
+            if tuple(bbox) in violating_bboxes:
+                color = (0, 0, 255)
+            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 2)
+            cv2.putText(frame, label, (int(x1), max(int(y1) - 10, 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2, cv2.LINE_AA)
 
     def process_video(self, video_source):
         """
@@ -90,7 +137,13 @@ class VideoProcessor:
         total_violations = 0
         
         while True:
+            if self.stop_event.is_set():
+                logger.info(f"Stop signal received for source {self.source_id}")
+                break
             success, frame = cap.read()
+            if self.stop_event.is_set():
+                logger.info(f"Stop signal received after frame read for source {self.source_id}")
+                break
             if not success:
                 logger.info(f"End of stream after {frame_count} frames")
                 break
@@ -147,6 +200,7 @@ class VideoProcessor:
 
                 # Gọi DSL rule engine
                 db = SessionLocal()
+                violating_bboxes = set()
                 try:
                     violations = evaluate_frame(
                         db=db,
@@ -155,6 +209,13 @@ class VideoProcessor:
                         current_frame=frame
                     )
                     if violations:
+                        for v in violations:
+                            try:
+                                bbox = v.metadata.get("bbox") if v.metadata else None
+                                if bbox and isinstance(bbox, list) and len(bbox) == 4:
+                                    violating_bboxes.add(tuple(int(x) for x in bbox))
+                            except Exception:
+                                continue
                         total_violations += len(violations)
                         logger.warning(f"🚨 Frame {frame_count}: {len(violations)} violation(s) detected!")
                 except Exception as e:
@@ -165,6 +226,16 @@ class VideoProcessor:
             except Exception as e:
                 logger.error(f"Error processing frame {frame_count}: {e}")
                 continue
+
+            try:
+                display_frame = frame.copy()
+                self._draw_zones(display_frame)
+                self._draw_detections(display_frame, dsl_objects, violating_bboxes)
+                ok, buffer = cv2.imencode('.jpg', display_frame)
+                if ok:
+                    stream_manager.set_frame(str(self.source_id), buffer.tobytes())
+            except Exception as e:
+                logger.error(f"Failed to encode/send frame for source {self.source_id}: {e}")
 
         cap.release()
         logger.info(f"Processing finished for source {self.source_id}")
