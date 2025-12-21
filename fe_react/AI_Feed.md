@@ -1,62 +1,84 @@
-**Act as:** Senior Frontend Developer
-**Task:** Create the API Integration Layer (Types and Service Functions) for the "Assignments" module based on the provided API documentation image.
-**Tech Stack:** TypeScript, React, Axios.
-
+**Act as:** Technical Writer / Frontend Developer
+**Task:** Create the "Violation Detection Rules (DSL)" documentation content and React display component.
 **Context:**
-You are implementing the frontend functionality to manage assignments between "Police" users and "Sources" (cameras/videos). The backend provides 4 endpoints for this module. Note the different roles required for different endpoints (Admin vs. Police).
+We need a user-facing documentation page that explains how to write rules for the system. The content is derived from the "DSL" technical document provided. The page should consist of a **Grammar Reference** section and a **Common Recipes/Examples** section.
+
+**Content to Implement:**
+
+### Part 1: DSL Grammar Reference
+Please render this as a clear reference table or list.
+
+* **Structure:** `IF <condition> THEN 'TRIGGER_VIOLATION'`
+* **Keywords:** `IF`, `THEN`, `AND`, `OR`, `IN`, `TRIGGER_VIOLATION`
+* **Comparators:** `==` (Equal), `!=` (Not Equal), `>` (Greater), `<` (Less), `>=` (Greater/Eq), `<=` (Less/Eq)
+* **Available Fields (Objects):**
+    * `object.class_name` (Enum: "car", "bus", "truck", "motorbike")
+    * `object.current_zone` (String: zone identifier)
+    * `object.speed_kmh` (Number)
+    * `object.direction_angle` (Number: 0-360 degrees)
+    * `object.attributes.has_helmet` (Boolean: true/false)
+    * `object.zone_duration_seconds("<zone_id>")` (Function: returns seconds in zone)
+* **Available Fields (Scene):**
+    * `scene.traffic_light_color` (Enum: "red", "green", "yellow")
 
 ---
 
-### **Assignments Module Specification**
-**Base URL:** `/api/v1/assignments`
+### Part 2: Rule Recipes (Examples)
+Please create a section for each violation type with the explanation and the code snippet.
 
-#### **Data Types**
-Based on the request and response examples in the documentation image, you must define the following TypeScript interfaces.
+#### **1. Wrong Lane Violation (Đi không đúng làn đường)**
+* **Logic:** Check if a vehicle class is inside a specific prohibited zone.
+* **Code Example:**
+    ```sql
+    IF object.class_name IN ("car", "bus", "truck")
+    AND object.current_zone == "motorbike_lane"
+    THEN TRIGGER_VIOLATION
+    ```
+* **Advanced (Negative Logic):**
+    ```sql
+    IF object.class_name == "car"
+    AND object.current_zone != "car_lane"
+    THEN TRIGGER_VIOLATION
+    ```
 
-*Note on Source Object:* Several endpoints return a list of source objects. Based on the image, a source object has this structure: `[{ "id": "...", "name": "...", "camera_url": "...", "file_path": "...", "source_type": "...", "is_active": true }]`. Please define a `Source` interface for this.
+#### **2. Illegal Stop/Parking (Dừng, đỗ xe sai nơi quy định)**
+* **Logic:** Vehicle speed is near zero AND they have stayed in a "no parking" zone for longer than X seconds.
+* **Code Example:**
+    ```sql
+    IF object.speed_kmh < 5
+    AND object.zone_duration_seconds("no_parking_zone") > 10 SECONDS
+    THEN TRIGGER_VIOLATION
+    ```
 
-1.  **`AssignSourcesPayload` (POST Request Body):**
-    * `police_id`: string (uuid)
-    * `source_ids`: string[] (array of uuids)
+#### **3. Wrong Way (Đi ngược chiều)**
+* **Logic:** Vehicle is moving in a direction angle that opposes traffic flow (e.g., between 150° and 210°).
+* **Code Example:**
+    ```sql
+    IF object.class_name IN ("car", "motorbike")
+    AND object.direction_angle > 150
+    AND object.direction_angle < 210
+    THEN TRIGGER_VIOLATION
+    ```
 
-2.  **`AssignmentResponse` (POST Response Body):**
-    * `police_id`: string
-    * `assigned_source_ids`: string[]
+#### **4. Red Light Violation (Vượt đèn đỏ)**
+* **Logic:** The traffic light is red AND the vehicle is moving above a speed threshold (optionally inside an intersection zone).
+* **Code Example:**
+    ```sql
+    IF scene.traffic_light_color == "red"
+    AND object.speed_kmh > 10
+    AND object.current_zone == "intersection_zone"
+    THEN TRIGGER_VIOLATION
+    ```
 
-3.  **`AllAssignmentsResponse` (GET /all Response Body):**
-    * This is a grouped object where keys are police IDs and values are arrays of source objects.
-    * Type: `Record<string, Source[]>`
+#### **5. No Helmet (Không đội mũ bảo hiểm)**
+* **Logic:** Vehicle is a motorbike AND the `has_helmet` attribute is false.
+* **Code Example:**
+    ```sql
+    IF object.class_name == "motorbike"
+    AND object.attributes.has_helmet == false
+    THEN TRIGGER_VIOLATION
+    ```
 
-#### **API Service Functions**
-Implement a service module (e.g., `assignmentService.ts`) using an Axios instance with functions for each endpoint below:
-
-1.  **Assign Sources to Police**
-    * **Endpoint:** `POST /api/v1/assignments`
-    * **Role:** Admin
-    * **Description:** Replaces the list of sources assigned to a specific police user.
-    * **Request Body:** `AssignSourcesPayload`
-    * **Function Signature:** `assignSources(payload: AssignSourcesPayload): Promise<AssignmentResponse>`
-
-2.  **Get Specific Police Assignments**
-    * **Endpoint:** `GET /api/v1/assignments/police/{police_id}`
-    * **Role:** Admin
-    * **Description:** Get the list of source objects assigned to a specific police ID path parameter.
-    * **Function Signature:** `getPoliceAssignments(policeId: string): Promise<Source[]>`
-
-3.  **Get "My" Assignments**
-    * **Endpoint:** `GET /api/v1/assignments/my-sources`
-    * **Role:** Police
-    * **Description:** Used by a logged-in police user to fetch their own assigned sources.
-    * **Function Signature:** `getMyAssignments(): Promise<Source[]>`
-
-4.  **Get All Assignments (Grouped)**
-    * **Endpoint:** `GET /api/v1/assignments/all`
-    * **Role:** Admin
-    * **Description:** Get all assignments, grouped by police ID.
-    * **Function Signature:** `getAllAssignments(): Promise<AllAssignmentsResponse>`
-
----
-
-### **Deliverables:**
-1.  **`src/types/assignments.ts`**: A file containing the interface definitions for `Source` (contextual based on response), `AssignSourcesPayload`, `AssignmentResponse`, and `AllAssignmentsResponse`.
-2.  **`src/services/assignmentService.ts`**: A service file containing the 4 asynchronous functions listed above, implemented with Axios. Ensure standard error handling is included.
+**Deliverables:**
+1.  **`src/data/dslDocumentation.ts`**: A structured JSON/Object containing these rules (titles, descriptions, and code strings).
+2.  **`src/pages/admin/rules/Documentation.tsx`**: A component that iterates over this data and renders a clean documentation UI (use a syntax highlighter component for the code blocks if possible).
