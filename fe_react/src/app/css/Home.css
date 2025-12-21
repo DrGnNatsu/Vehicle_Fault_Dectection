@@ -1,0 +1,51 @@
+@import "@/index.css";
+
+.homeContainer {
+    @apply min-h-screen flex flex-col bg-background text-foreground;
+}
+
+.homeMain {
+    @apply flex-1 flex flex-col;
+}
+
+.homeHeader {
+    @apply w-full border-b border-border bg-card/50 backdrop-blur-sm sticky top-20 z-40;
+}
+
+.homeHeaderContent {
+    @apply max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6;
+}
+
+.homeHeaderInfo {
+    @apply space-y-1;
+}
+
+.homeTitle {
+    @apply text-3xl md:text-4xl font-bold text-primary tracking-tight;
+}
+
+.homeSubtitle {
+    @apply text-muted-foreground text-lg;
+}
+
+.addCameraButton {
+    @apply h-11 px-6 rounded-lg font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98];
+}
+
+.cameraGridSection {
+    @apply w-full max-w-7xl mx-auto px-6 py-12;
+}
+
+.cameraGrid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center;
+}
+
+@media (max-width: 640px) {
+    .homeHeaderContent {
+        @apply py-6;
+    }
+    
+    .cameraGrid {
+        @apply gap-6;
+    }
+}

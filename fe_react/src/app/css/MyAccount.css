@@ -1,0 +1,119 @@
+@import "@/index.css";
+
+.myAccountContainer {
+    @apply min-h-screen flex flex-col bg-background text-foreground;
+}
+
+.myAccountMain {
+    @apply flex-1 w-full px-4 py-12 flex items-center justify-center;
+}
+
+/* --- Main Card --- */
+.accountCard {
+    @apply w-full min-w-[320px] max-w-4xl bg-card rounded-2xl border border-border shadow-sm overflow-hidden flex flex-col;
+}
+
+.accountHeader {
+    @apply p-8 border-b border-border bg-muted/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4;
+}
+
+.accountTitle {
+    @apply text-3xl font-extrabold text-primary tracking-tight;
+}
+
+.accountSubtitle {
+    @apply text-muted-foreground mt-1 font-medium;
+}
+
+.headerStatus {
+    @apply flex items-center;
+}
+
+.accountForm {
+    @apply flex flex-col;
+}
+
+.formGrid {
+    @apply p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-border;
+}
+
+.fieldGroup {
+    @apply flex flex-col gap-2.5;
+}
+
+.fieldLabel {
+    @apply text-xs font-bold text-muted-foreground uppercase tracking-widest;
+}
+
+.fieldInput {
+    @apply w-full;
+}
+
+.fieldDisplay {
+    @apply w-full p-3 bg-muted/30 rounded-lg border border-border font-medium text-foreground min-h-[44px] flex items-center transition-colors;
+}
+
+.dateGrid {
+    @apply px-8 py-6 bg-muted/5 grid grid-cols-1 sm:grid-cols-2 gap-6 border-b border-border;
+}
+
+.dateItem {
+    @apply flex flex-col gap-1;
+}
+
+.dateValue {
+    @apply text-sm font-semibold text-foreground/80;
+}
+
+.formFooter {
+    @apply p-8 bg-muted/10 flex flex-col sm:flex-row items-center justify-between gap-6;
+}
+
+.footerLeft {
+    @apply w-full sm:w-auto;
+}
+
+.footerRight {
+    @apply w-full sm:w-auto flex justify-end;
+}
+
+.passwordSection {
+    @apply flex items-center;
+}
+
+.changePasswordButton {
+    @apply w-full sm:w-auto h-auto py-2.5 px-6 font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-md transition-all active:scale-95;
+}
+
+.viewActions {
+    @apply flex flex-col sm:flex-row gap-3 w-full sm:w-auto;
+}
+
+.actionButtons {
+    @apply flex gap-3 w-full sm:w-auto;
+}
+
+.editButton, .deleteButton, .saveButton, .cancelButton {
+    @apply flex-1 sm:flex-none font-bold px-8 py-2.5;
+}
+
+.statusBadge {
+    @apply px-3 py-1 rounded-full text-xs font-bold uppercase;
+}
+
+.status-active {
+    @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800;
+}
+
+.status-inactive {
+    @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800;
+}
+
+@media (max-width: 640px) {
+    .accountHeader {
+        @apply p-6;
+    }
+    .formGrid, .dateGrid, .formFooter {
+        @apply p-6;
+    }
+}

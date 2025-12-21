@@ -1,0 +1,26 @@
+@import "@/index.css";
+
+.aboutCard {
+    @apply flex flex-col justify-center items-center text-center shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 bg-card text-card-foreground border border-border rounded-xl;
+    @apply w-full h-full min-h-[12rem];
+}
+
+.aboutCardContent {
+    @apply p-8 flex flex-col items-center gap-4;
+}
+
+.aboutCardIconContainer {
+    @apply flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-2;
+}
+
+.aboutCardIcon {
+    @apply h-7 w-7;
+}
+
+.aboutCardTitle {
+    @apply text-xl font-bold tracking-tight text-foreground;
+}
+
+.aboutCardDescription {
+    @apply text-base text-muted-foreground leading-relaxed;
+}

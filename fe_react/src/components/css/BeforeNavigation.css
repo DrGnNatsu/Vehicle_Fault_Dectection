@@ -1,0 +1,51 @@
+@import "@/index.css";
+
+.navContainer {
+    @apply w-full h-20 bg-background/80 backdrop-blur border-b border-border sticky top-0 z-50 flex justify-center;
+}
+
+.navContent {
+    @apply w-full max-w-7xl px-6 h-full flex items-center justify-between;
+}
+
+.navBrand {
+    @apply flex items-center gap-2 transition-opacity hover:opacity-90;
+}
+
+.navLogo {
+    @apply w-8 h-8 text-primary;
+}
+
+.navTitle {
+    @apply text-foreground text-xl font-bold tracking-tight;
+}
+
+.navActions {
+    @apply flex items-center gap-3 sm:gap-4;
+}
+
+.themeToggle {
+    @apply flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full border border-border bg-muted/30;
+}
+
+.themeLabel {
+    @apply text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden sm:block;
+}
+
+.loginButton {
+    @apply font-semibold;
+}
+
+.loginIcon {
+    @apply w-4 h-4;
+}
+
+@media (max-width: 640px) {
+    .navContent {
+        @apply px-4;
+    }
+    
+    .navTitle {
+        @apply text-lg;
+    }
+}

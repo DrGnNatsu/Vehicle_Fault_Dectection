@@ -1,0 +1,47 @@
+@import "@/index.css";
+
+.cameraCardContainer {
+    @apply w-full max-w-sm h-[400px] bg-card rounded-xl border border-border flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-primary/20;
+}
+
+.addCardContainer {
+    @apply flex items-center justify-center border-dashed border-2 hover:border-primary hover:bg-primary/5 cursor-pointer;
+}
+
+.cameraCardHeader {
+    @apply px-5 py-5 space-y-1;
+}
+
+.cameraCardTitle {
+    @apply text-xl font-bold text-foreground;
+}
+
+.cameraCardDescription {
+    @apply text-sm text-muted-foreground line-clamp-1;
+}
+
+.cameraCardContent {
+    @apply flex-1 flex justify-center items-center p-5;
+}
+
+.cameraCardPreview {
+    @apply w-full h-full bg-muted/50 rounded-lg flex items-center justify-center overflow-hidden border border-border/50;
+}
+
+.cameraCardFooter {
+    @apply p-5 border-t border-border flex gap-3 bg-muted/10;
+}
+
+.cameraCardButton {
+    @apply flex-1 font-semibold;
+}
+
+.deleteButton {
+    @apply flex-1 font-semibold;
+}
+
+@media (max-width: 640px) {
+    .cameraCardContainer {
+        @apply max-w-full h-auto min-h-[400px];
+    }
+}

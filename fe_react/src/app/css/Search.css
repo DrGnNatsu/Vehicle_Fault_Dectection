@@ -1,0 +1,69 @@
+@import "@/index.css";
+
+.searchContainer {
+    @apply min-h-screen flex flex-col bg-background text-foreground;
+}
+
+.searchMain {
+    @apply flex-1 w-full max-w-7xl mx-auto px-4 py-12 flex flex-col gap-8;
+}
+
+.searchHeader {
+    @apply flex flex-col gap-4 items-center text-center mb-8;
+}
+
+.searchTitle {
+    @apply text-4xl md:text-6xl font-extrabold text-primary tracking-tight leading-tight;
+}
+
+.searchBarWrapper {
+    @apply w-full max-w-5xl mx-auto flex gap-2 p-1.5 bg-card border border-border rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-primary/20 transition-all;
+}
+
+.searchInputInner {
+    @apply flex-1 flex items-center relative;
+}
+
+.searchIcon {
+    @apply absolute left-3 w-5 h-5 text-muted-foreground pointer-events-none;
+}
+
+.searchInput {
+    @apply w-full bg-transparent border-none shadow-none focus-visible:ring-0 text-lg py-6 pl-10;
+}
+
+.searchButton {
+    @apply h-auto px-8 rounded-lg font-semibold transition-all;
+}
+
+.searchError {
+    @apply text-destructive font-medium text-center bg-destructive/10 p-4 rounded-lg border border-destructive/20 max-w-2xl mx-auto w-full;
+}
+
+.resultCard {
+    @apply max-w-2xl mx-auto w-full border-border shadow-md rounded-xl overflow-hidden;
+}
+
+.resultCardHeader {
+    @apply border-b border-border bg-muted/30 !p-6;
+}
+
+.resultCardTitle {
+    @apply text-xl font-bold text-foreground;
+}
+
+.resultCardContent {
+    @apply !p-6 space-y-4;
+}
+
+.resultItem {
+    @apply flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-border/50 pb-3 last:border-0 last:pb-0;
+}
+
+.resultLabel {
+    @apply text-sm font-medium text-muted-foreground uppercase tracking-wider;
+}
+
+.resultValue {
+    @apply text-base font-semibold text-foreground mt-1 sm:mt-0;
+}

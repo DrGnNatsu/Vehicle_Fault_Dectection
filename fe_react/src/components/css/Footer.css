@@ -1,0 +1,53 @@
+@import "@/index.css";
+
+.footerContainer {
+    @apply w-full bg-background/80 backdrop-blur border-t border-border flex justify-center;
+}
+
+.footerContent {
+    @apply w-full max-w-7xl px-6 py-12 flex flex-col gap-12;
+}
+
+.footerTop {
+    @apply flex flex-col md:flex-row justify-between items-center md:items-center gap-8;
+}
+
+.brandSection {
+    @apply flex flex-col md:flex-row items-center gap-2;
+}
+
+.logo {
+    @apply w-5 h-5 text-foreground;
+}
+
+.brandName {
+    @apply text-foreground text-lg font-semibold tracking-tight;
+}
+
+.socialSection {
+    @apply flex items-center gap-1;
+}
+
+.socialMediaLink {
+    @apply text-muted-foreground hover:text-foreground transition-colors;
+}
+
+.socialIcon {
+    @apply w-5 h-5;
+}
+
+.footerBottom {
+    @apply flex flex-col md:flex-row justify-between items-center md:items-center pt-8 border-t border-border/50 gap-6;
+}
+
+.copyrightText {
+    @apply text-muted-foreground text-sm;
+}
+
+.footerLinks {
+    @apply flex items-center gap-4;
+}
+
+.footerLink {
+    @apply text-muted-foreground hover:text-foreground text-sm transition-colors;
+}
