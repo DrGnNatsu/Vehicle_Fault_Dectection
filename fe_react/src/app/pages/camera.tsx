@@ -57,7 +57,7 @@ const Camera = () => {
 export default Camera;
 
 function CanvasDragRect() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [dragging, setDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -65,13 +65,15 @@ function CanvasDragRect() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
   }, []);
 
-  const getMousePos = (e) => {
+  const getMousePos = (e: React.MouseEvent) => {
+    if (!canvasRef.current) return { x: 0, y: 0 };
     const rect = canvasRef.current.getBoundingClientRect();
     return {
       x: e.clientX - rect.left,
@@ -79,26 +81,30 @@ function CanvasDragRect() {
     };
   };
 
-  const onMouseDown = (e) => {
+  const onMouseDown = (e: React.MouseEvent) => {
     setDragging(true);
     setStartPos(getMousePos(e));
   };
 
-  const onMouseMove = (e) => {
-    if (!dragging) return;
-    setCurrentPos(getMousePos(e));
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!dragging || !canvasRef.current) return;
+    const pos = getMousePos(e);
+    setCurrentPos(pos);
 
-    const ctx = canvasRef.current.getContext("2d");
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const x = Math.min(startPos.x, currentPos.x);
-    const y = Math.min(startPos.y, currentPos.y);
-    const w = Math.abs(startPos.x - currentPos.x);
-    const h = Math.abs(startPos.y - currentPos.y);
+      const x = Math.min(startPos.x, pos.x);
+      const y = Math.min(startPos.y, pos.y);
+      const w = Math.abs(startPos.x - pos.x);
+      const h = Math.abs(startPos.y - pos.y);
 
-    ctx.strokeStyle = "red";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x, y, w, h); // draw selection
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, w, h); // draw selection
+    }
   };
 
   const onMouseUp = () => {

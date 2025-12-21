@@ -9,4 +9,8 @@ export const API_ENDPOINTS = {
     BASE: '/api/v1/users',
     DETAILS: (id: string) => `/api/v1/users/${id}`,
   },
+  SOURCES: {
+    BASE: '/api/v1/sources',
+    DETAILS: (id: string) => `/api/v1/sources/${id}`,
+  },
 };

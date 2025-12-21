@@ -12,7 +12,7 @@ const allNavLinks = [
   { to: "/blog", text: "Blog", roles: ['admin', 'police'] },
   { to: "/documentation", text: "Documentation", roles: ['admin', 'police'] },
   { to: "/about", text: "About Us", roles: ['admin', 'police'] },
-  { to: "/search", text: "Search", roles: ['admin', 'police', 'user'] },
+  { to: "/search", text: "Search Violations", roles: ['admin', 'police', 'user'] },
 ];
 
 export default function AfterNavigation() {
