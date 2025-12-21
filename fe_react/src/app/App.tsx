@@ -1,4 +1,6 @@
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import PageTransition from "@/components/PageTransition";
 import LandingPage from "./pages/LandingPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import AboutUsPage from "./pages/AboutUsPage.tsx";
@@ -12,26 +14,29 @@ import Camera from "./pages/camera";
 import SearchPage from "./pages/SearchPage.tsx";
 
 const App = () => {
-    return (
-        <div>
-            {" "}
-            <Routes>
-                <Route index element={<LandingPage />} />
-                <Route path="home" element={<HomePage />} />
-                <Route path="landing" element={<LandingPage />} />
-                <Route path="about" element={<AboutUsPage />} />
-                <Route path="account-settings" element={<AccountSetting />} />
-                <Route path="blog" element={<BlogPage />} />
-                <Route path="camera" element={<Camera />} />
-                <Route path="documentation" element={<DocumentationPage />} />
-                <Route path="login" element={<LoginPage />} />
-                <Route path="register" element={<RegisterPage />} />
-                <Route path="reset-password" element={<ResetPasswordPage />} />
-                <Route path="search" element={<SearchPage />} />
-                <Route path="*" element={<HomePage />} />
-            </Routes>
-        </div>
-    );
+  const location = useLocation();
+
+  return (
+    <div className="app-container">
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route index element={<PageTransition><LandingPage /></PageTransition>} />
+          <Route path="home" element={<PageTransition><HomePage /></PageTransition>} />
+          <Route path="landing" element={<PageTransition><LandingPage /></PageTransition>} />
+          <Route path="about" element={<PageTransition><AboutUsPage /></PageTransition>} />
+          <Route path="account-settings" element={<PageTransition><AccountSetting /></PageTransition>} />
+          <Route path="blog" element={<PageTransition><BlogPage /></PageTransition>} />
+          <Route path="camera" element={<PageTransition><Camera /></PageTransition>} />
+          <Route path="documentation" element={<PageTransition><DocumentationPage /></PageTransition>} />
+          <Route path="login" element={<PageTransition><LoginPage /></PageTransition>} />
+          <Route path="register" element={<PageTransition><RegisterPage /></PageTransition>} />
+          <Route path="reset-password" element={<PageTransition><ResetPasswordPage /></PageTransition>} />
+          <Route path="search" element={<PageTransition><SearchPage /></PageTransition>} />
+          <Route path="*" element={<PageTransition><HomePage /></PageTransition>} />
+        </Routes>
+      </AnimatePresence>
+    </div>
+  );
 };
 
 export default App;

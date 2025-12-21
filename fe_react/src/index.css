@@ -191,5 +191,10 @@
 @layer base {
   body {
     letter-spacing: var(--tracking-normal);
+    @apply text-foreground bg-background;
+  }
+  
+  input, textarea, select, button {
+    @apply text-foreground;
   }
 }

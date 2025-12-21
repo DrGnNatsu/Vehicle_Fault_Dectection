@@ -1,28 +1,56 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authService } from "@/services/authService";
 import "../css/Register.css";
+
+import { validatePassword } from "@/utils/utils";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    /**
-     * TODO: API FETCH PLACEHOLDER
-     * Place for registration API integration
-     */
-    console.log("[v0] Registration submitted", {
-      email,
-      password,
-      confirmPassword,
-    });
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    if (!validatePassword(password)) {
+      setError("Password must be at least 8 characters including uppercase, lowercase, number and special character.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const data = await authService.register(email, password, confirmPassword);
+      console.log("Registration successful:", data);
+      setSuccess(data.message || "Account created successfully! Redirecting to login...");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (err: any) {
+      console.error("Registration failed:", err);
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,6 +63,16 @@ export default function RegisterPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="authForm">
+        {error && (
+          <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-lg">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="p-3 text-sm text-green-600 bg-green-100 rounded-lg">
+            {success}
+          </div>
+        )}
         <div className="authInputGroup">
           <Label htmlFor="email" className="authLabel">
             Email
@@ -47,6 +85,7 @@ export default function RegisterPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="authInput"
             required
+            disabled={isLoading || !!success}
           />
         </div>
 
@@ -62,9 +101,10 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             className="authInput"
             required
+            disabled={isLoading || !!success}
           />
           <p className="authInputHint">
-            Must be at least 6 characters.
+                        Must be at least 8 characters including uppercase, lowercase, number and special character.
           </p>
         </div>
 
@@ -80,11 +120,16 @@ export default function RegisterPage() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             className="authInput"
             required
+            disabled={isLoading || !!success}
           />
         </div>
 
-        <Button type="submit" className="authSubmitButton">
-          Create Account <ArrowRight className="w-4 h-4 ml-1" />
+        <Button type="submit" className="authSubmitButton" disabled={isLoading || !!success}>
+          {isLoading ? "Creating account..." : (
+            <>
+              Create Account <ArrowRight className="w-4 h-4 ml-1" />
+            </>
+          )}
         </Button>
       </form>
 

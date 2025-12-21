@@ -121,7 +121,7 @@
 }
 
 .authGoogleButton {
-    @apply h-11 rounded-xl font-semibold border-border hover:bg-accent transition-colors;
+    @apply h-11 rounded-xl font-semibold border-border hover:bg-accent text-foreground transition-colors;
 }
 
 .authFooterLinks {

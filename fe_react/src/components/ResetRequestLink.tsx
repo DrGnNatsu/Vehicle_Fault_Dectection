@@ -5,9 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { motion } from "framer-motion";
+
 interface ResetRequestLinkProps {
   onSubmit: (email: string) => void;
 }
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export default function ResetRequestLink({ onSubmit }: ResetRequestLinkProps) {
   const [email, setEmail] = useState("");
@@ -18,16 +35,25 @@ export default function ResetRequestLink({ onSubmit }: ResetRequestLinkProps) {
   };
 
   return (
-    <>
-      <div className="authFormHeader">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-col gap-8"
+    >
+      <motion.div variants={itemVariants} className="authFormHeader">
         <h2 className="authFormTitle">Reset Password</h2>
         <p className="authFormSubtitle">
           Enter your email address and we will send you a link to reset your
           password.
         </p>
-      </div>
+      </motion.div>
 
-      <form onSubmit={handleSubmit} className="authForm">
+      <motion.form 
+        variants={itemVariants} 
+        onSubmit={handleSubmit} 
+        className="authForm"
+      >
         <div className="authInputGroup">
           <Label htmlFor="email" className="authLabel">
             Email
@@ -46,15 +72,15 @@ export default function ResetRequestLink({ onSubmit }: ResetRequestLinkProps) {
         <Button type="submit" className="authSubmitButton">
           Send Reset Email
         </Button>
-      </form>
+      </motion.form>
 
-      <div className="authFooterLinks">
+      <motion.div variants={itemVariants} className="authFooterLinks">
         <p className="authFooterText">
           <Link to="/login" className="authLink">
             <ArrowLeft className="inline w-4 h-4 mr-1" /> Back to Login
           </Link>
         </p>
-      </div>
-    </>
+      </motion.div>
+    </motion.div>
   );
 }

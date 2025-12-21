@@ -4,6 +4,8 @@ import AuthLayout from "@/components/AuthLayout";
 import ResetRequestLink from "@/components/ResetRequestLink";
 import ResetCheckEmail from "@/components/ResetCheckEmail";
 import ResetSetNewPassword from "@/components/ResetSetNewPassword";
+import { AnimatePresence } from "framer-motion";
+import PageTransition from "@/components/PageTransition";
 import "../css/ResetPassword.css";
 
 type ResetStage = "request" | "check-email" | "set-password";
@@ -33,7 +35,7 @@ export default function ResetPasswordPage() {
     console.log("Resending reset link...");
   };
 
-  const handleSetNewPassword = (password: string) => {
+  const handleSetNewPassword = (_password: string) => {
     /**
      * TODO: API FETCH PLACEHOLDER
      * Place for "Set New Password" API integration
@@ -42,20 +44,33 @@ export default function ResetPasswordPage() {
     navigate("/login");
   };
 
+  const handleBackToRequest = () => {
+    setStage("request");
+  };
+
   return (
     <AuthLayout>
-      {stage === "request" && (
-        <ResetRequestLink onSubmit={handleRequestLink} />
-      )}
-      {stage === "check-email" && (
-        <ResetCheckEmail 
-          onLogin={handleLoginRedirect} 
-          onResend={handleResendEmail} 
-        />
-      )}
-      {stage === "set-password" && (
-        <ResetSetNewPassword onSubmit={handleSetNewPassword} />
-      )}
+      <AnimatePresence mode="wait">
+        {stage === "request" && (
+          <PageTransition key="request">
+            <ResetRequestLink onSubmit={handleRequestLink} />
+          </PageTransition>
+        )}
+        {stage === "check-email" && (
+          <PageTransition key="check-email">
+            <ResetCheckEmail 
+              onLogin={handleLoginRedirect} 
+              onResend={handleResendEmail} 
+              onBack={handleBackToRequest}
+            />
+          </PageTransition>
+        )}
+        {stage === "set-password" && (
+          <PageTransition key="set-password">
+            <ResetSetNewPassword onSubmit={handleSetNewPassword} />
+          </PageTransition>
+        )}
+      </AnimatePresence>
       
       {/* 
         DEBUG HELPER: 

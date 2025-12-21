@@ -9,6 +9,27 @@ interface ResetSetNewPasswordProps {
   onSubmit: (password: string) => void;
 }
 
+import { motion } from "framer-motion";
+
+interface ResetSetNewPasswordProps {
+  onSubmit: (password: string) => void;
+}
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0 },
+};
+
 export default function ResetSetNewPassword({ onSubmit }: ResetSetNewPasswordProps) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,15 +40,24 @@ export default function ResetSetNewPassword({ onSubmit }: ResetSetNewPasswordPro
   };
 
   return (
-    <>
-      <div className="authFormHeader">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-col gap-8"
+    >
+      <motion.div variants={itemVariants} className="authFormHeader">
         <h2 className="authFormTitle">Set a New Password</h2>
         <p className="authFormSubtitle">
           Enter your new password and confirm it to set a new password.
         </p>
-      </div>
+      </motion.div>
 
-      <form onSubmit={handleSubmit} className="authForm">
+      <motion.form 
+        variants={itemVariants} 
+        onSubmit={handleSubmit} 
+        className="authForm"
+      >
         <div className="authInputGroup">
           <Label htmlFor="password" title="Password" className="authLabel">
             Password
@@ -42,7 +72,7 @@ export default function ResetSetNewPassword({ onSubmit }: ResetSetNewPasswordPro
             required
           />
           <p className="authInputHint">
-            Must be at least 6 characters.
+                        Must be at least 8 characters including uppercase, lowercase, number and special character.
           </p>
         </div>
 
@@ -64,15 +94,15 @@ export default function ResetSetNewPassword({ onSubmit }: ResetSetNewPasswordPro
         <Button type="submit" className="authSubmitButton">
           Set Password
         </Button>
-      </form>
+      </motion.form>
 
-      <div className="authFooterLinks">
+      <motion.div variants={itemVariants} className="authFooterLinks">
         <p className="authFooterText">
           <Link to="/login" className="authLink">
             <ArrowLeft className="inline w-4 h-4 mr-1" /> Back to Login
           </Link>
         </p>
-      </div>
-    </>
+      </motion.div>
+    </motion.div>
   );
 }

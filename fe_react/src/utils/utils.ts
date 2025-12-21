@@ -8,3 +8,15 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/**
+ * Validates password based on requirements:
+ * - At least 8 characters
+ * - Uppercase & Lowercase letters
+ * - At least one number
+ * - At least one special character
+ */
+export function validatePassword(password: string): boolean {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+  return regex.test(password);
+}
