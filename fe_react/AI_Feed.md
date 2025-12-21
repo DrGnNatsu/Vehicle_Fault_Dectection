@@ -1,50 +1,77 @@
 **Act as:** Senior Frontend Developer
-**Task:** Create the API Integration Layer (Service) and Types for the "Sources" module.
+**Task:** Implement the "Advanced Source Operations" API service and Types.
 **Tech Stack:** TypeScript, React, [Axios or Fetch]
 
 **Context:**
-You are building the frontend for a video management dashboard. You need to consume the `/api/v1/sources` endpoints documented below. The backend handles the RBAC (Admin vs. Police), so your primary job is to correctly type the data and handle the responses/errors.
+You are extending the "Sources" module. We have already covered listing and creating. Now, we need to implement the detailed control features: updating, deleting, retrieving detection zones, controlling the processing engine (start/stop), and viewing the live stream.
 
-**API Specifications (to be consumed):**
+**API Specifications (Advanced Operations):**
 
-1.  **List Sources**
-    * **Endpoint:** `GET /api/v1/sources`
-    * **Purpose:** Fetch the table of all available cameras/video files.
-    * **Expected Data:** Array of `Source` objects.
-    * **Notes:** If the logged-in user is "Police", this list will be pre-filtered by the backend to show only assigned sources.
+1.  **Update Source**
+    * **Endpoint:** `PUT /api/v1/sources/{source_id}`
+    * **Role:** Admin only.
+    * **Purpose:** Update fields like `file_path`, `is_active`, or `source_type`.
+    * **Response:** Updated `Source` object.
 
-2.  **Get Source Details**
-    * **Endpoint:** `GET /api/v1/sources/{source_id}`
-    * **Purpose:** Fetch details to play the video or edit settings.
-    * **Error Handling:** If a "Police" user tries to access a source they aren't assigned to, the API will throw a `403 Forbidden`. You must handle this error gracefully in the UI.
+2.  **Delete Source**
+    * **Endpoint:** `DELETE /api/v1/sources/{source_id}`
+    * **Role:** Admin only.
+    * **Response:** `204 No Content`.
+    * **UI Behavior:** On success, redirect the user back to the list view or remove the item from the local state.
 
-3.  **Create Source**
-    * **Endpoint:** `POST /api/v1/sources`
-    * **Purpose:** Admin-only form to add a new camera or upload a video.
-    * **Payload:** `{ name: string, camera_url?: string, file_path?: string, source_type: 'video' | 'camera' }`
+3.  **Get Zones (ROI)**
+    * **Endpoint:** `GET /api/v1/sources/{source_id}/zones`
+    * **Role:** Admin.
+    * **Purpose:** Retrieve the Region of Interest (ROI) coordinates for drawing overlays on the video.
+    * **Data Shape:** Array of objects containing `coordinates: { points: [[x,y], ...] }`.
+
+4.  **Processing Controls**
+    * **Start:** `POST /api/v1/sources/{source_id}/processing/start`
+    * **Stop:** `POST /api/v1/sources/{source_id}/processing/stop`
+    * **Role:** Admin OR Police.
+    * **Payload:** None (empty body).
+    * **Response:** `{ source_id: string, status: "running" | "stopped", message: string }`.
+
+5.  **Live Stream**
+    * **Endpoint:** `GET /api/v1/sources/{source_id}/stream`
+    * **Format:** MJPEG stream (multipart).
+    * **Usage:** This URL will likely be used directly in an `<img src="..." />` tag in the React component rather than an Axios fetch, but we need a helper function to construct the full URL (potentially appending an auth token if required).
 
 **Data Structures (TypeScript Interfaces):**
-Please define the `Source` interface based on this response shape:
+
 ```typescript
-interface Source {
+// For the Zone/ROI data
+interface Zone {
   id: string;
-  name: string;
-  camera_url: string | null; // Nullable
-  file_path: string | null;  // Nullable
-  is_active: boolean;
-  source_type: 'video' | 'camera'; // Enum
+  source_id: string;
+  coordinates: {
+    points: [number, number][]; // Array of [x, y] tuples
+  };
   created_at: string;
   updated_at: string;
 }
 
+// For Processing Control responses
+interface ProcessingStatusResponse {
+  source_id: string;
+  status: 'running' | 'stopped';
+  message: string;
+}
+```
 Deliverables:
 
-TypeScript Definitions: Create a types/source.ts file with the interfaces for the Response and the CreatePayload.
+Extend types/source.ts: Add the Zone and ProcessingStatusResponse interfaces.
 
-API Service: Create a service file (e.g., services/sourceService.ts) using Axios (or Fetch) with functions for:
+Update services/sourceService.ts: Add functions for:
 
-fetchSources()
+updateSource(id, data)
 
-fetchSourceDetail(id: string)
+deleteSource(id)
 
-createSource(data: CreateSourcePayload)
+fetchSourceZones(id)
+
+startProcessing(id)
+
+stopProcessing(id)
+
+getStreamUrl(id): A helper that returns the full absolute URL string for the video stream.

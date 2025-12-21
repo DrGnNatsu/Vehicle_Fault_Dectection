@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus, Camera, Pencil } from "lucide-react";
+import { Trash2, Plus, Camera, Pencil, Video } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { CameraCardProps } from "@/types/camera";
 import './css/CameraCard.css';
@@ -34,6 +34,8 @@ export function CameraCard(props: CameraCardProps) {
     id,
     name = "Camera Name",
     source_type = "camera",
+    camera_url,
+    file_path,
     role = "user",
     onDelete,
     onEdit,
@@ -41,6 +43,9 @@ export function CameraCard(props: CameraCardProps) {
 
   const isAdmin = role?.toLowerCase() === "admin";
   const isPoliceOrAdmin = isAdmin || role?.toLowerCase() === "police";
+
+  // Logic: Show Video icon if camera_url is null and file_path exists
+  const isVideoFile = !camera_url && !!file_path;
 
   return (
     <div className="cameraCardContainer">
@@ -53,7 +58,11 @@ export function CameraCard(props: CameraCardProps) {
 
       <div className="cameraCardContent">
         <div className="cameraCardPreview">
-          <Camera className="w-10 h-10 text-muted-foreground/30" />
+          {isVideoFile ? (
+            <Video className="w-10 h-10 text-muted-foreground/30" />
+          ) : (
+            <Camera className="w-10 h-10 text-muted-foreground/30" />
+          )}
         </div>
       </div>
 

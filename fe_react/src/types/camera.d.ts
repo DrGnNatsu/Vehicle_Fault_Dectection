@@ -10,6 +10,8 @@ type NormalCameraCardProps = {
   id: string
   name: string
   source_type: 'video' | 'camera'
+  camera_url: string | null
+  file_path: string | null
   role?: string | null
   onDelete?: () => void
   onEdit?: () => void

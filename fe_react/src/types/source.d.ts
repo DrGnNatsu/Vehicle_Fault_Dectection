@@ -1,0 +1,41 @@
+export interface Source {
+  id: string;
+  name: string;
+  camera_url: string | null;
+  file_path: string | null;
+  is_active: boolean;
+  source_type: 'video' | 'camera';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateSourcePayload {
+  name: string;
+  camera_url?: string;
+  file_path?: string;
+  source_type: 'video' | 'camera';
+}
+
+export interface UpdateSourcePayload {
+  name?: string;
+  camera_url?: string;
+  file_path?: string;
+  source_type?: 'video' | 'camera';
+  is_active?: boolean;
+}
+
+export interface Zone {
+  id: string;
+  source_id: string;
+  coordinates: {
+    points: [number, number][]; // Array of [x, y] tuples
+  };
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProcessingStatusResponse {
+  source_id: string;
+  status: 'running' | 'stopped';
+  message: string;
+}
