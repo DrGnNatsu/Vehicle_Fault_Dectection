@@ -12,13 +12,15 @@ from models.zone import Zone
 from models.rule import Rule
 from models.user import User
 from service.assignment_service import AssignmentService
-from api.v1.dependencies import get_current_user, require_admin
+from api.v1.dependencies import get_current_user, require_admin, _ensure_source_access
 from engine.ai.processing_manager import processing_manager
 from sockets.stream_manager import stream_manager
 from schemas.sources import SourceResponse, SourceCreateRequest, SourceUpdateRequest, SourceProcessingResponse
 from schemas.zone import ZoneResponse
 from schemas.rule import RuleCreateRequest, RuleResponse
 from api.v1.rules import _rule_to_response
+
+
 
 router = APIRouter(prefix="/sources", tags=["sources"])
 
@@ -49,27 +51,7 @@ def _zone_to_response(zone: Zone) -> ZoneResponse:
     )
 
 
-def _ensure_source_access(source_id: UUID, current_user: User, db: Session):
-    """Verify that the user can operate on the given source."""
-    user_role = current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
-    user_role = user_role.lower()
 
-    if user_role == "admin":
-        return
-
-    if user_role == "police":
-        assigned_source_ids = AssignmentService.get_assigned_source_ids(db, current_user.id)
-        if source_id not in assigned_source_ids:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You don't have access to this source"
-            )
-        return
-
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
-        detail="You don't have access to this source"
-    )
 
 
 @router.get("", response_model=List[SourceResponse])
@@ -252,15 +234,18 @@ async def delete_source(
 async def get_source_zones(
     source_id: UUID,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get all zones for a specific source.
-    Admin only - used for UI drawing.
+    - Admin: can see any source zones
+    - Police: can only see assigned source zones
     """
     source = db.query(Source).filter(Source.id == source_id).first()
     if not source:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
+    
+    _ensure_source_access(source_id, current_user, db)
     
     zones = db.query(Zone).filter(Zone.source_id == source_id).all()
     
@@ -381,12 +366,15 @@ async def create_source_rule(
     source_id: UUID,
     request: RuleCreateRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Create a NEW rule and assign it to this source immediately.
-    Admin only.
+    - Admin: can manage any source rules
+    - Police: can manage assigned source rules
     """
+    _ensure_source_access(source_id, current_user, db)
+    
     source = db.query(Source).filter(Source.id == source_id).first()
     if not source:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
@@ -414,12 +402,15 @@ async def delete_source_rule(
     source_id: UUID,
     rule_id: UUID,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Unassign and Delete a rule from a source.
-    Admin only.
+    - Admin: can manage any source rules
+    - Police: can manage assigned source rules
     """
+    _ensure_source_access(source_id, current_user, db)
+    
     source = db.query(Source).filter(Source.id == source_id).first()
     if not source:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")

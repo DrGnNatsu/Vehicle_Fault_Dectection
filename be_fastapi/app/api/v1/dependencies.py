@@ -8,6 +8,32 @@ from jwt.exceptions import InvalidTokenError
 from database.session import get_db
 from models.user import User
 from core.config import settings
+from service.assignment_service import AssignmentService
+
+# ... imports ...
+
+
+def _ensure_source_access(source_id: UUID, current_user: User, db: Session):
+    """Verify that the user can operate on the given source."""
+    user_role = current_user.role.value if hasattr(current_user.role, 'value') else str(current_user.role)
+    user_role = user_role.lower()
+
+    if user_role == "admin":
+        return
+
+    if user_role == "police":
+        assigned_source_ids = AssignmentService.get_assigned_source_ids(db, current_user.id)
+        if source_id not in assigned_source_ids:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You don't have access to this source"
+            )
+        return
+
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="You don't have access to this source"
+    )
 
 # OAuth2 scheme - tự động lấy token từ Authorization: Bearer <token>
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
